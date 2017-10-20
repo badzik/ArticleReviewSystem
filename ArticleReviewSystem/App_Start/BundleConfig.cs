@@ -25,8 +25,7 @@ namespace ArticleReviewSystem
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/font-awesome.css",
-                      "~/Content/site.css"));
+                      "~/Content/font-awesome.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/scripts").Include(
             "~/Scripts/jquery-ui-1.10.4.custom.min.js",
@@ -35,6 +34,7 @@ namespace ArticleReviewSystem
             "~/Scripts/gsdk-bootstrapswitch.js",
             "~/Scripts/get-shit-done.js",
             "~/Scripts/custom.js",
+            "~/Scripts/jquery-1.10.2.js",
             "~/Scripts/bootstrap.js"));
         }
     }
