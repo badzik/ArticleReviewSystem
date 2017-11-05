@@ -1,0 +1,69 @@
+﻿@model ArticleReviewSystem.Models.AddArticleViewModel
+
+<!doctype html>
+<html>
+
+<body>
+
+    <div class="main">
+        <div class="container tim-container" style="max-width:800px; padding-top:100px">
+            <h1 class="text-center">Dodaj artykuł</h1>
+            <h4 class="text-center">@ViewData["Extension"]</h4>
+            <section id="RegisForm">
+
+                @using (Html.BeginForm("AddArticle", "Article", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        <hr />
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.files, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                <input type="submit" value="Dodaj" class="btn btn-block btn-lg btn-info btn-fill" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </section>
+        </div>
+        <div class="space"></div>
+    </div>
+
+</body>
+
+</html>

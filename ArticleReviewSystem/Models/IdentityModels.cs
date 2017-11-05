@@ -20,6 +20,11 @@ namespace ArticleReviewSystem.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        public DbSet<Articles> AspNetArticles { get; set; }
+
+        public DbSet<CoAuthors> AspNetCoAuthors { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
