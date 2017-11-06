@@ -7,62 +7,72 @@ using System.IO;
 using ArticleReviewSystem.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using ArticleReviewSystem.ViewModels;
 
 namespace ArticleReviewSystem.Controllers
 {
     public class ArticleController : Controller
     {
-        private ApplicationUser ApplicationUser;
-
-
-        // GET: Article
+        [Authorize]
         public ActionResult AddArticle()
         {
-            return View();
+            //AddArticleViewModel avm = new AddArticleViewModel(2,7);
+            AddArticleViewModel avm = new AddArticleViewModel()
+            {
+                MaxCoAuthors = 7,
+                CoAuthorsCounter = 2
+            };
+            return View(avm);
         }
 
         [HttpPost]
-        public ActionResult AddArticle(AddArticleViewModel avm)
+        public ActionResult AddArticle(AddArticleViewModel avm,IEnumerable<CoAuthorViewModel> coAuthors)
         {
-            if (avm.files != null && avm.files.ContentLength > 0)
+            avm.CoAuthors = coAuthors;
+            if (avm.File != null && avm.File.ContentLength > 0)
             {
-                String extension = Path.GetExtension(avm.files.FileName).ToUpper();
+                String extension = Path.GetExtension(avm.File.FileName).ToUpper();
 
                 if (extension == ".PDF")
                 {
                     ApplicationDbContext db = new ApplicationDbContext();
                     var userId = User.Identity.GetUserId();
 
-                    Stream str = avm.files.InputStream;
+                    Stream str = avm.File.InputStream;
                     BinaryReader Br = new BinaryReader(str);
                     Byte[] pdfFile = Br.ReadBytes((Int32)str.Length);
-
-                    db.AspNetArticles.Add(new Articles
+                    List<CoAuthor> coAuthorsList = new List<CoAuthor>();
+                    for (int i = 0; i < avm.CoAuthorsCounter; i++)
                     {
-                        Article = pdfFile,
-                        ArticleName = avm.files.FileName,
+                        if (avm.CoAuthors.ToList()[i].Name!="" && avm.CoAuthors.ToList()[i].Surname != "" && avm.CoAuthors.ToList()[i].Affiliation != "")
+                        {
+                            coAuthorsList.Add(new CoAuthor
+                            {
+                                Name = avm.CoAuthors.ToList()[i].Name,
+                                Surname = avm.CoAuthors.ToList()[i].Surname,
+                                Affiliation = avm.CoAuthors.ToList()[i].Affiliation
+                            });
+                        }
+
+                    }
+
+                    db.Articles.Add(new Article
+                    {
+                        Document = pdfFile,
+                        ArticleName = avm.File.FileName,
                         Title = avm.Title,
                         Date = DateTime.Today,
-                        Status = "oczekiwanie",
-                        UserId = userId
-
+                        Status = "awaiting",
+                        MainAuthor = db.Users.Find(userId),
+                        CoAuthors=coAuthorsList
                     });
-                    for (int i = 0; i < 2; i++)
-                    {
-                        db.AspNetCoAuthors.Add(new CoAuthors
-                        {
-                            Name = avm.Name,
-                            Surname = avm.Surname,
-                            Affiliation = "affiliation",
-                            ArticleId = 1
-                        });
-                    }
+
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ViewData["Extension"] = "niewłaściwy format pliku";
+                    ViewData["Extension"] = "Wrong article format, PDF is required.";
                     return View();
                 }
             }

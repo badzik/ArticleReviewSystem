@@ -7,14 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleReviewSystem.Models
 {
-    [Table("AspNetCoAuthors")]
-    public class CoAuthors
+    public class CoAuthor
     {
         [Key]
         public int CoAuthorId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Affiliation { get; set; }
-        public int ArticleId { get; set; }
+        public virtual Article CoAuthoredArticle { get; set; }
     }
 }

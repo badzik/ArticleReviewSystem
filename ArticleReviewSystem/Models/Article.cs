@@ -7,16 +7,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleReviewSystem.Models
 {
-    [Table("AspNetArticles")]
-    public class Articles
+    public class Article
     {
         [Key]
         public int ArticleId { get; set; }
-        public byte[] Article { get; set; }
+        public byte[] Document { get; set; }
         public string ArticleName { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public string Status { get; set; }
-        public string UserId { get; set; }
+
+        public virtual ApplicationUser MainAuthor { get; set; }
+        [InverseProperty("CoAuthoredArticle")]
+        public virtual ICollection<CoAuthor> CoAuthors { get; set; }
     }
 }

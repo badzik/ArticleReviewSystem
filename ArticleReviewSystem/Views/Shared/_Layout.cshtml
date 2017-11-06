@@ -17,10 +17,12 @@
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
 
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/scripts")
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
-    
+
 
 </head>
 <body>
@@ -55,7 +57,7 @@
                             <li class="dropdown">
                                 <a href="#gsdk" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/Article/AddArticle">Dodaj artykuł</a></li>
+                                    <li><a href="/Article/AddArticle">Add Article</a></li>
                                     <li><a href="#gsdk">Another action</a></li>
                                     <li><a href="#gsdk">Something</a></li>
                                     <li><a href="#gsdk">Another action</a></li>
@@ -66,6 +68,9 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0);" data-toggle="search" class="hidden-xs"><i class="fa fa-search"></i></a>
+                            </li>
+                            <li>
+                                <a href="/Article/AddArticle">Add Article</a>
                             </li>
                         </ul>
                         <form class="navbar-form navbar-left navbar-search-form" role="search">
@@ -93,9 +98,7 @@
         </footer>
     </div>
 
-    @*@Scripts.Render("~/bundles/jquery")*@
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/scripts")
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

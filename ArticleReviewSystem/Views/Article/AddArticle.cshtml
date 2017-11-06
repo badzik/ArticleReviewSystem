@@ -7,14 +7,15 @@
 
     <div class="main">
         <div class="container tim-container" style="max-width:800px; padding-top:100px">
-            <h1 class="text-center">Dodaj artykuł</h1>
+            <h1 class="text-center">Add article</h1>
             <h4 class="text-center">@ViewData["Extension"]</h4>
             <section id="RegisForm">
 
                 @using (Html.BeginForm("AddArticle", "Article", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
-
+                    @Html.HiddenFor(model=>model.CoAuthorsCounter)
+                    @Html.HiddenFor(model => model.MaxCoAuthors)
                     <div class="form-horizontal">
                         <hr />
 
@@ -27,33 +28,65 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        <div class="coAutohorsBox">
+                            <div class="col-md-12 panel panel-default">
+                                @Html.LabelFor(model => model.CoAuthors, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <a href="#" id="coAuthPlus"><i class="more-less glyphicon glyphicon-plus"></i></a>
+                                <a href="#" id="coAuthMinus"><i class="more-less glyphicon glyphicon-minus"></i></a>
                             </div>
+                                
+
+                            @{
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    <div class="panel panel-default" id='CoAuthorPanel@(i)'>
+                                        <h5>CoAuthor #@(i+1)</h5>
+                                        <div class="form-group">
+                                            @Html.Label("[" + i + "].Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            @*@Html.LabelFor(model => model.CoAuthors[i].Name, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                            <div class="col-md-8">
+                                                @Html.Editor("[" + i + "].Name", new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                                @Html.ValidationMessage("[" + i + "].Name", new { @class = "text-danger" })
+                                                @*@Html.EditorFor(model => model.CoAuthors[i].Name, new { htmlAttributes = new { @class = "form-control col-md-2", autocomplete = "off" } })*@
+                                                @*@Html.ValidationMessageFor(model => model.CoAuthors[i].Name, "", new { @class = "text-danger" })*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.Label("[" + i + "].Surname", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            @*@Html.LabelFor(model => model.CoAuthors[i].Surname, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                            <div class="col-md-8">
+                                                @Html.Editor("[" + i + "].Surname", new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                                @Html.ValidationMessage("[" + i + "].Surname", new { @class = "text-danger" })
+                                                @*@Html.EditorFor(model => model.CoAuthors[i].Surname, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })*@
+                                                @*@Html.ValidationMessageFor(model => model.CoAuthors[i].Surname, "", new { @class = "text-danger" })*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.Label("[" + i + "].Affiliation", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            @*@Html.LabelFor(model => model.CoAuthors[i].Affiliation, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                            <div class="col-md-8">
+                                                @Html.Editor("[" + i + "].Affiliation", new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                                @Html.ValidationMessage("[" + i + "].Affiliation", new { @class = "text-danger" })
+                                                @*@Html.EditorFor(model => model.CoAuthors[i].Affiliation, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })*@
+                                                @*@Html.ValidationMessageFor(model => model.CoAuthors[i].Affiliation, "", new { @class = "text-danger" })*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="form-group col-md-12">
+                            @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                                @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.files, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
+                                @Html.TextBoxFor(model => model.File, "", new { @type = "file", @multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
-                                <input type="submit" value="Dodaj" class="btn btn-block btn-lg btn-info btn-fill" />
+                                <input type="submit" value="Add" class="btn btn-block btn-lg btn-info btn-fill" />
                             </div>
                         </div>
                     </div>
@@ -67,3 +100,4 @@
 </body>
 
 </html>
+<script src="~/Scripts/AddArticleScript.js"></script>
