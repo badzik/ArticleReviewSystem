@@ -20,6 +20,8 @@ namespace ArticleReviewSystem.Models
         public int MaxCoAuthors { get; set; }
         public int CoAuthorsCounter { get; set; }
 
+        public string ArticleName { get; set; }
+
         [Required]
         [DataType(DataType.Upload)]  
         [Display(Name = "File")]

@@ -42,6 +42,7 @@
         for (var i = 0; i < current; i++) {
             $('#CoAuthorPanel' + i).show();
         }
+        $('#CoAuthorsCounter').html(current);
     }
 
     $("#coAuthPlus").click(function (event) {

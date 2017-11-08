@@ -1,6 +1,9 @@
 ﻿@model ArticleReviewSystem.Models.AddArticleViewModel
 
 <!doctype html>
+
+<link href="~/Content/AddArticleStyling.css" rel="stylesheet"/>
+
 <html>
 
 <body>
@@ -14,7 +17,7 @@
                 @using (Html.BeginForm("AddArticle", "Article", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.HiddenFor(model=>model.CoAuthorsCounter)
+                    @Html.HiddenFor(model => model.CoAuthorsCounter)
                     @Html.HiddenFor(model => model.MaxCoAuthors)
                     <div class="form-horizontal">
                         <hr />
@@ -29,46 +32,37 @@
                         </div>
 
                         <div class="coAutohorsBox">
-                            <div class="col-md-12 panel panel-default">
+                            <div class="col-md-12 form-group">
                                 @Html.LabelFor(model => model.CoAuthors, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <a href="#" id="coAuthPlus"><i class="more-less glyphicon glyphicon-plus"></i></a>
-                                <a href="#" id="coAuthMinus"><i class="more-less glyphicon glyphicon-minus"></i></a>
+                                <a href="#" id="coAuthPlus"><span class="more-less glyphicon glyphicon-plus-sign" style="vertical-align:middle;"></span></a>
+                                <a href="#" id="coAuthMinus"><span class="more-less glyphicon glyphicon-minus-sign" style="vertical-align:middle;"></span></a>
                             </div>
-                                
+                            @Html.ValidationMessageFor(model => model.CoAuthors, "", new { @class = "text-danger" })
 
                             @{
                                 for (int i = 0; i < 7; i++)
                                 {
                                     <div class="panel panel-default" id='CoAuthorPanel@(i)'>
-                                        <h5>CoAuthor #@(i+1)</h5>
+                                        <h5>CoAuthor #@(i + 1)</h5>
                                         <div class="form-group">
                                             @Html.Label("[" + i + "].Name", htmlAttributes: new { @class = "control-label col-md-2" })
-                                            @*@Html.LabelFor(model => model.CoAuthors[i].Name, htmlAttributes: new { @class = "control-label col-md-2" })*@
                                             <div class="col-md-8">
                                                 @Html.Editor("[" + i + "].Name", new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                                                 @Html.ValidationMessage("[" + i + "].Name", new { @class = "text-danger" })
-                                                @*@Html.EditorFor(model => model.CoAuthors[i].Name, new { htmlAttributes = new { @class = "form-control col-md-2", autocomplete = "off" } })*@
-                                                @*@Html.ValidationMessageFor(model => model.CoAuthors[i].Name, "", new { @class = "text-danger" })*@
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             @Html.Label("[" + i + "].Surname", htmlAttributes: new { @class = "control-label col-md-2" })
-                                            @*@Html.LabelFor(model => model.CoAuthors[i].Surname, htmlAttributes: new { @class = "control-label col-md-2" })*@
                                             <div class="col-md-8">
                                                 @Html.Editor("[" + i + "].Surname", new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                                                 @Html.ValidationMessage("[" + i + "].Surname", new { @class = "text-danger" })
-                                                @*@Html.EditorFor(model => model.CoAuthors[i].Surname, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })*@
-                                                @*@Html.ValidationMessageFor(model => model.CoAuthors[i].Surname, "", new { @class = "text-danger" })*@
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             @Html.Label("[" + i + "].Affiliation", htmlAttributes: new { @class = "control-label col-md-2" })
-                                            @*@Html.LabelFor(model => model.CoAuthors[i].Affiliation, htmlAttributes: new { @class = "control-label col-md-2" })*@
                                             <div class="col-md-8">
                                                 @Html.Editor("[" + i + "].Affiliation", new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                                                 @Html.ValidationMessage("[" + i + "].Affiliation", new { @class = "text-danger" })
-                                                @*@Html.EditorFor(model => model.CoAuthors[i].Affiliation, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })*@
-                                                @*@Html.ValidationMessageFor(model => model.CoAuthors[i].Affiliation, "", new { @class = "text-danger" })*@
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +73,19 @@
                         <div class="form-group col-md-12">
                             @Html.LabelFor(model => model.File, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.File, "", new { @type = "file", @multiple = "multiple" })
+                                <div class="input-group article-preview" style="height:100%">
+                                    <input type="text" class="form-control article-preview-filename" disabled="disabled" style="height:100%">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default article-preview-clear" style="display:none;">
+                                            <span class="glyphicon glyphicon-remove"></span> Clear
+                                        </button>
+                                        <div class="btn btn-default article-preview-input">
+                                            <span class="glyphicon glyphicon-folder-open"></span>
+                                            <span class="article-preview-input-title">Browse</span>
+                                            <input type="file" accept=".pdf" name="File" />
+                                        </div>
+                                    </div>
+                                </div>
                                 @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -90,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                }
+                                }
 
             </section>
         </div>
@@ -100,4 +106,6 @@
 </body>
 
 </html>
+
 <script src="~/Scripts/AddArticleScript.js"></script>
+<script src="~/Scripts/AddArticleFileBrowseScript.js"></script>

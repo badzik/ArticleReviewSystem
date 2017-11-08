@@ -20,7 +20,8 @@ namespace ArticleReviewSystem.Controllers
             AddArticleViewModel avm = new AddArticleViewModel()
             {
                 MaxCoAuthors = 7,
-                CoAuthorsCounter = 2
+                CoAuthorsCounter = 2,
+                ArticleName=null
             };
             return View(avm);
         }
@@ -29,6 +30,11 @@ namespace ArticleReviewSystem.Controllers
         public ActionResult AddArticle(AddArticleViewModel avm,IEnumerable<CoAuthorViewModel> coAuthors)
         {
             avm.CoAuthors = coAuthors;
+            if (String.IsNullOrEmpty(avm.Title))
+            {
+                ModelState.AddModelError("Title", "Title is required");
+                return View(avm);
+            }
             if (avm.File != null && avm.File.ContentLength > 0)
             {
                 String extension = Path.GetExtension(avm.File.FileName).ToUpper();
@@ -42,9 +48,13 @@ namespace ArticleReviewSystem.Controllers
                     BinaryReader Br = new BinaryReader(str);
                     Byte[] pdfFile = Br.ReadBytes((Int32)str.Length);
                     List<CoAuthor> coAuthorsList = new List<CoAuthor>();
+                    if (db.Articles.Any(a => a.Title.ToUpper() == avm.Title.ToUpper())){
+                        ModelState.AddModelError("Title", "There is an article with a same title");
+                        return View(avm);
+                    }
                     for (int i = 0; i < avm.CoAuthorsCounter; i++)
                     {
-                        if (avm.CoAuthors.ToList()[i].Name!="" && avm.CoAuthors.ToList()[i].Surname != "" && avm.CoAuthors.ToList()[i].Affiliation != "")
+                        if (!String.IsNullOrEmpty(avm.CoAuthors.ToList()[i].Name) && !String.IsNullOrEmpty(avm.CoAuthors.ToList()[i].Surname) && !String.IsNullOrEmpty(avm.CoAuthors.ToList()[i].Affiliation))
                         {
                             coAuthorsList.Add(new CoAuthor
                             {
@@ -52,6 +62,11 @@ namespace ArticleReviewSystem.Controllers
                                 Surname = avm.CoAuthors.ToList()[i].Surname,
                                 Affiliation = avm.CoAuthors.ToList()[i].Affiliation
                             });
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("CoAuthors", "CoAuthors fields are not filled properly");
+                            return View(avm);
                         }
 
                     }
