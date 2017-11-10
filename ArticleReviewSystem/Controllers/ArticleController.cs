@@ -8,6 +8,7 @@ using ArticleReviewSystem.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using ArticleReviewSystem.ViewModels;
+using ArticleReviewSystem.Enums;
 
 namespace ArticleReviewSystem.Controllers
 {
@@ -16,7 +17,6 @@ namespace ArticleReviewSystem.Controllers
         [Authorize]
         public ActionResult AddArticle()
         {
-            //AddArticleViewModel avm = new AddArticleViewModel(2,7);
             AddArticleViewModel avm = new AddArticleViewModel()
             {
                 MaxCoAuthors = 7,
@@ -77,7 +77,7 @@ namespace ArticleReviewSystem.Controllers
                         ArticleName = avm.File.FileName,
                         Title = avm.Title,
                         Date = DateTime.Today,
-                        Status = "awaiting",
+                        Status = ArticleStatus.WaitingToAssignReviewers,
                         MainAuthor = db.Users.Find(userId),
                         CoAuthors=coAuthorsList
                     });

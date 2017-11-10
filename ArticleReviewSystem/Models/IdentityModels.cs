@@ -15,6 +15,9 @@ namespace ArticleReviewSystem.Models
         [InverseProperty("MainAuthor")]
         public virtual ICollection<Article> AddedArticles { get; set; }
 
+        [InverseProperty("Reviewer")]
+        public virtual ICollection<Review> AssignedReviews { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -26,11 +29,9 @@ namespace ArticleReviewSystem.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-
         public DbSet<Article> Articles { get; set; }
-
         public DbSet<CoAuthor> CoAuthors { get; set; }
-
+        public DbSet<Review> Reviews { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
