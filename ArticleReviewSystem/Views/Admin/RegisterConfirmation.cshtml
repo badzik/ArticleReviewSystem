@@ -1,0 +1,79 @@
+﻿@model ArticleReviewSystem.ViewModels.RegisterConfirmationViewModel
+
+<!doctype html>
+
+<html>
+<body>
+    <div class="main">
+        <div class="container tim-container" style="max-width:800px; padding-top:100px">
+            <h1 class="text-center">Registration confirmation</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Affiliation</th>
+                        <th>Email address</th>
+                        <th>Register date</th>
+                        <th>Confirmation email send date</th>
+                        <th> </th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.UnconfirmedUsers)
+                    {
+                        <tr>
+                            <td>Name</td>
+                            <td>Surname</td>
+                            <td>Affiliation</td>
+                            <td>@user.Email</td>
+                            <td>Register date</td>
+                            @if (user.ConfirmRegistrationDate == null)
+                            {
+                                <td>-</td>
+                                <td><button onclick="location.href='@Url.Action("ConfirmRegistration", "Admin", new { userId = user.Id })'" class="btn btn-block btn-fill btn-success">Confirm</button></td>
+                            }
+                            else
+                            {
+                                <td>@user.ConfirmRegistrationDate</td>
+                                <td><button onclick="location.href='@Url.Action("ConfirmRegistration", "Admin", new { userId = user.Id })'" class="btn btn-block btn-fill btn-info">Resend</button></td>
+                            }
+                            <td><a data-toggle="modal" data-id="@user.Id" class="open-deleteDialog btn btn-block btn-fill btn-danger" data-target="#deleteModal">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Account delete</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to delete this account ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger" id="deleteLink">Delete account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    $('.open-deleteDialog').click(function (e) {
+        var userId = $(this).data('id');
+        var link = "/Admin/deleteAccount?userId=" + userId;
+        $("#deleteLink").attr("href", link);
+    });
+</script>

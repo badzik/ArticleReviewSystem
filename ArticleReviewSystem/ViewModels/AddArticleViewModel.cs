@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using ArticleReviewSystem.ViewModels;
 
-namespace ArticleReviewSystem.Models
+namespace ArticleReviewSystem.ViewModels
 {
     public class AddArticleViewModel
     {
