@@ -148,7 +148,16 @@ namespace ArticleReviewSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    AdditionalInfo = model.AdditionalInfo,
+                    Affiliation = model.Affiliation,
+                    Name = model.Name,
+                    Surname = model.Surname, //TODO: enum degree
+                    RegistrationDate = DateTime.Now
+                };
+               
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

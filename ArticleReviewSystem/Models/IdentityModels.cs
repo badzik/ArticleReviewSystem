@@ -12,8 +12,13 @@ namespace ArticleReviewSystem.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public DateTime? ConfirmRegistrationDate { get; set; } 
-
+        public DateTime? ConfirmRegistrationDate { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Affiliation { get; set; }
+        public string AdditionalInfo { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        // TODO: enum degree
         [InverseProperty("MainAuthor")]
         public virtual ICollection<Article> AddedArticles { get; set; }
 
