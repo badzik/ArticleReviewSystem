@@ -6,7 +6,7 @@
 
     function plusFunc() {
         if (current < max) {
-            current += 1;
+            current = Number(current) + 1;
             updateModel();
             updateView();
         }
@@ -14,7 +14,7 @@
 
     function minusFunc() {
         if (current > 0) {
-            current -= 1;
+            current = Number(current) - 1;
             clearAndHide(current);
             updateModel();
             updateView();
