@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ArticleReviewSystem.Enums;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ArticleReviewSystem.Models
@@ -64,6 +66,10 @@ namespace ArticleReviewSystem.Models
 
     public class RegisterViewModel
     {
+        
+        public Dictionary<string, string> Degree { get; set; }
+        [Display(Name = "Degree")]
+        public string SelectedDegress { get; set; }
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
@@ -92,7 +98,6 @@ namespace ArticleReviewSystem.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
         [Display(Name = "Additional information")]
         public string AdditionalInfo { get; set; }
     }

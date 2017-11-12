@@ -15,6 +15,7 @@ namespace ArticleReviewSystem.Models
         public DateTime? ConfirmRegistrationDate { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        public string Degree { get; set; }
         public string Affiliation { get; set; }
         public string AdditionalInfo { get; set; }
         public DateTime RegistrationDate { get; set; }

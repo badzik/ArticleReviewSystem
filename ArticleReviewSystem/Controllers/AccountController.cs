@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ArticleReviewSystem.Models;
+using ArticleReviewSystem.Enums;
 
 namespace ArticleReviewSystem.Controllers
 {
@@ -72,7 +73,8 @@ namespace ArticleReviewSystem.Controllers
             {
                 return View(model);
             }
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var user = UserManager.FindByEmail(model.Email);
+            var result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -136,7 +138,12 @@ namespace ArticleReviewSystem.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            Degrees degrees = new Degrees();
+            RegisterViewModel registerViewModel = new RegisterViewModel
+            {
+                Degree = degrees.DegreesDictonary
+            };
+            return View(registerViewModel);
         }
 
         //
@@ -149,18 +156,20 @@ namespace ArticleReviewSystem.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser {
-                    UserName = model.Email,
+                    UserName = String.Format("{0} {1} {2}",model.SelectedDegress ,model.Name, model.Surname),
                     Email = model.Email,
                     AdditionalInfo = model.AdditionalInfo,
                     Affiliation = model.Affiliation,
                     Name = model.Name,
-                    Surname = model.Surname, //TODO: enum degree
-                    RegistrationDate = DateTime.Now
+                    Surname = model.Surname, 
+                    RegistrationDate = DateTime.Now,
+                    Degree = model.SelectedDegress 
                 };
                
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    UserManager.AddToRole(user.Id, "User");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -173,8 +182,8 @@ namespace ArticleReviewSystem.Controllers
                 }
                 AddErrors(result);
             }
-
-            // If we got this far, something failed, redisplay form
+            Degrees degrees = new Degrees();
+            model.Degree = degrees.DegreesDictonary;
             return View(model);
         }
 
