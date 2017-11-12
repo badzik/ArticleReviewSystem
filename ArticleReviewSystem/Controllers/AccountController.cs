@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ArticleReviewSystem.Models;
 using ArticleReviewSystem.Enums;
+using ArticleReviewSystem.Helpers;
 
 namespace ArticleReviewSystem.Controllers
 {
@@ -58,6 +59,11 @@ namespace ArticleReviewSystem.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -74,6 +80,13 @@ namespace ArticleReviewSystem.Controllers
                 return View(model);
             }
             var user = UserManager.FindByEmail(model.Email);
+
+            if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError("", "The account has not  been verified. Check your email.");
+                return View();
+            }
+
             var result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
@@ -170,15 +183,11 @@ namespace ArticleReviewSystem.Controllers
                 if (result.Succeeded)
                 {
                     UserManager.AddToRole(user.Id, "User");
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    //TODO: await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    return RedirectToAction("Index", "Home");
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.sendMailAsync(UserManager, user);
+                    return View("DisplayEmail");
                 }
                 AddErrors(result);
             }
@@ -190,13 +199,12 @@ namespace ArticleReviewSystem.Controllers
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        [HttpGet]
+        public ActionResult ConfirmEmail()
         {
-            if (userId == null || code == null)
-            {
-                return View("Error");
-            }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            string token = Request.QueryString["token"];
+            string id = Request.QueryString["id"];
+            IdentityResult result = UserManager.ConfirmEmail(id, token);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
