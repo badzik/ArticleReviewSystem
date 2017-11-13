@@ -1,7 +1,9 @@
 ﻿using ArticleReviewSystem.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using System;
 
@@ -18,7 +20,7 @@ namespace ArticleReviewSystem
         private void CreateRolesandUsers()
         {
             ApplicationDbContext context = new ApplicationDbContext();
-
+            var provider = new DpapiDataProtectionProvider("ArticleReviewSystem");
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             if (!roleManager.RoleExists("Admin"))
@@ -40,6 +42,10 @@ namespace ArticleReviewSystem
                 if (superAdminAccount.Succeeded)
                 {
                     var result1 = UserManager.AddToRole(user.Id, "Admin");
+                    UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
+                        provider.Create("EmailConfirmation"));
+                    var token = UserManager.GenerateEmailConfirmationToken(user.Id);
+                    var result = UserManager.ConfirmEmail(user.Id, token);
                 }
             }
    
