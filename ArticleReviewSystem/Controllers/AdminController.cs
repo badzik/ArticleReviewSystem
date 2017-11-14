@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace ArticleReviewSystem.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private ApplicationUserManager userManager;
@@ -56,7 +57,7 @@ namespace ArticleReviewSystem.Controllers
             MailMessage message;
             string token = await userManager.GenerateEmailConfirmationTokenAsync(user.Id);
             token = HttpUtility.UrlEncode(token);
-            string link = "localhost:2686\\Account\\ConfirmEmail?userId=" + user.Id + "&code=" + token;
+            string link = "https://localhost:44330\\Account\\ConfirmEmail?userId=" + user.Id + "&code=" + token;
             var fromAddress = new MailAddress(mailLogin, "ArticleReviewerSystem");
             var toAddress = new MailAddress(user.Email, "New User");
             const string subject = "Email confirmation - Article Review System";

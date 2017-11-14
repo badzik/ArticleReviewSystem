@@ -24,11 +24,11 @@
                     @foreach (var user in Model.UnconfirmedUsers)
                     {
                         <tr>
-                            <td>Name</td>
-                            <td>Surname</td>
-                            <td>Affiliation</td>
+                            <td>@user.Name</td>
+                            <td>@user.Surname</td>
+                            <td>@user.Affiliation</td>
                             <td>@user.Email</td>
-                            <td>Register date</td>
+                            <td>@user.RegistrationDate</td>
                             @if (user.ConfirmRegistrationDate == null)
                             {
                                 <td>-</td>
