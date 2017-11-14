@@ -14,19 +14,19 @@ namespace ArticleReviewSystem.Helpers
     {
         public async void sendMailAsync(ApplicationUserManager userManager, ApplicationUser user)
         {
-            var code = await userManager.GenerateEmailConfirmationTokenAsync(userManager.FindByEmail(user.Email).Id);
+            var code = await userManager.GeneratePasswordResetTokenAsync(user.Id);
             code = HttpUtility.UrlEncode(code);
-            string link = "https://localhost:44330\\Account\\ConfirmEmail?token=" + code + "&id=" + user.Id;
-            var fromAddress = new MailAddress("adm1n_b00ktrade@outlook.com", "Booktrade");
+            string link = "https://localhost:44330\\Account\\ResetPassword?token=" + code;
+            var fromAddress = new MailAddress("articleReviewerTeam@gmail.com", "Booktrade");
             var toAddress = new MailAddress(user.Email, user.Name);
-            const string fromPassword = "Website007!";
-            const string subject = "Registration confirmation - ArticleReviewSystem";
-            string body = "Welcome " + user.UserName + ",</br>A new account has been created on ArticleReviewSystem.</br></br>"
-                + "Please confirm your account by clicking this link</br>" + "<a>" + link + "</a>";
+            const string fromPassword = "articleReview007";
+            const string subject = "Reset password - ArticleReviewSystem";
+            string body = "Welcome " + user.UserName + ",</br>Do you want change the password?</ br></br>"
+                + "Click the link if you want to reset your password.</br>" + "<a>" + link + "</a>";
 
             var smtp = new SmtpClient
             {
-                Host = "smtp-mail.outlook.com",
+                Host = "smtp.gmail.com",
                 Port = 587,
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
