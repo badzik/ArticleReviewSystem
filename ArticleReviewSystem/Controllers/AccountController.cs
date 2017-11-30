@@ -81,6 +81,11 @@ namespace ArticleReviewSystem.Controllers
             }
             var user = UserManager.FindByEmail(model.Email);
 
+            if(user == null)
+            {
+                ModelState.AddModelError("", "Wrong login or password.");
+                return View(model);
+            }
             if (!user.EmailConfirmed)
             {
                 ModelState.AddModelError("", "The account has not  been verified. Check your email.");
