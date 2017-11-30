@@ -15,6 +15,10 @@
         });
     });
 
+    $("#finalAccept").click(function (event) {
+        $('#myForm').submit();
+    });
+
     $('#SortBy').on('change', function () {
         event.preventDefault();
         $.when(makeSearchAjax()).done(function () {

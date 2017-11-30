@@ -133,7 +133,7 @@ namespace ArticleReviewSystem.Controllers
         [HttpPost]
         public ActionResult ReviewersAssignAdd(ReviewersAssignViewModel ram, string reviewerId)
         {
-            //add reviewer to model
+            ModelState.Clear();
             ApplicationDbContext dbContext = new ApplicationDbContext();
             var article = dbContext.Articles.Find(ram.Article.ArticleId);
             List<SimpleUser> assigned = new List<SimpleUser>();
@@ -188,8 +188,57 @@ namespace ArticleReviewSystem.Controllers
         [HttpPost]
         public ActionResult ReviewersAssignDelete(ReviewersAssignViewModel ram, string reviewerId)
         {
-            //TODO:delete reviewer from model
-            return RedirectToAction("ArticlesReviewers", "Admin");
+            ModelState.Clear();
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            var article = dbContext.Articles.Find(ram.Article.ArticleId);
+            List<SimpleUser> assigned = new List<SimpleUser>();
+            List<ApplicationUser> available = new List<ApplicationUser>();
+            ApplicationUser tempUser;
+
+            //prepare assigned list
+            foreach(SimpleUser a in ram.AssignedReviewers)
+            {
+                if (a.Id != reviewerId)
+                {
+                    tempUser = dbContext.Users.Find(a.Id);
+                    assigned.Add(new SimpleUser()
+                    {
+                        Affiliation =tempUser.Affiliation,
+                        Id =tempUser.Id,
+                        Name =tempUser.Name,
+                        Surname =tempUser.Surname
+                    });
+                }
+            }
+
+            var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
+            available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower())).ToList();
+            foreach (SimpleUser s in assigned)
+            {
+                var toRemove = available.FirstOrDefault(a => a.Id == s.Id);
+                available.Remove(toRemove);
+            }
+            if (!String.IsNullOrEmpty(ram.SearchPhrase))
+            {
+                available = available.Where(r => r.Name.ToLower().Contains(ram.SearchPhrase.ToLower()) || r.Surname.ToLower().Contains(ram.SearchPhrase.ToLower()) || r.Affiliation.ToLower().Contains(ram.SearchPhrase.ToLower())).ToList();
+            }
+            switch (ram.SortBy)
+            {
+                case UserSortBy.Name:
+                    available = available.OrderBy(r => r.Name).ToList();
+                    break;
+                case UserSortBy.Surname:
+                    available = available.OrderBy(r => r.Surname).ToList();
+                    break;
+                case UserSortBy.Affiliation:
+                    available = available.OrderBy(r => r.Affiliation).ToList();
+                    break;
+            }
+            ram.Article = article;
+            ram.AssignedReviewers = assigned;
+            ram.AvailableReviewers = available;
+
+            return View("ReviewersAssign", ram);
         }
 
         [HttpPost]
