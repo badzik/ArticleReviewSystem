@@ -1,0 +1,34 @@
+﻿@model ArticleReviewSystem.ViewModels.ReviewersAssignPartialModel
+
+<div class="Results">
+    @if (Model.AvailableReviewers.Count != 0)
+            {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Affiliation</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.HiddenFor(m => m.MaxPages)
+                @foreach (var reviewer in Model.AvailableReviewers)
+                {
+                    <tr id="clicable-row">
+                        <td>@reviewer.Name</td>
+                        <td>@reviewer.Surname</td>
+                        <td>@reviewer.Affiliation</td>
+                        <td><a class="btn btn-info btn-fill addReviewer" href="#" data-value=@reviewer.Id>Assign</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3 class="text-center">No available reviewers found</h3>
+    }
+</div>
+

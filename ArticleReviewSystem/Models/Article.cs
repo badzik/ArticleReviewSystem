@@ -13,7 +13,7 @@ namespace ArticleReviewSystem.Models
         [Key]
         public int ArticleId { get; set; }
         public byte[] Document { get; set; }
-        public string ArticleName { get; set; }
+        public string ArticleName { get; set; }  //Document Name
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public ArticleStatus Status { get; set; }

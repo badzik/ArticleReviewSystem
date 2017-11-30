@@ -1,0 +1,104 @@
+﻿@model ArticleReviewSystem.ViewModels.ReviewersAssignViewModel
+
+<!doctype html>
+<script src="~/Scripts/ReviewersAssignScript.js"></script>
+<html>
+<body>
+    <div class="main">
+        <h1 class="text-center">@Model.Article.Title</h1>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myForm" }))
+            {
+        @Html.HiddenFor(m=>m.Article.ArticleId)
+        <h2>Assigned reviewers</h2>
+        if (Model.AssignedReviewers.Count != 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Affiliation</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(int i=0;i<Model.AssignedReviewers.Count;i++)
+                    {
+                        <tr id="clicable-row">
+                            @Html.HiddenFor(m=>m.AssignedReviewers[i].Id)
+                            <td>@Html.DisplayFor(m=>m.AssignedReviewers[i].Name)</td>
+                            <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Surname)</td>
+                            <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Affiliation)</td>
+                            <td><button class="btn btn-info btn-danger deleteReviewer" href="#" formmethod="post" formaction="@Url.Action("ReviewersAssignDelete","Admin",new { reviewerId= Model.AssignedReviewers[i].Id })">Remove</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h3 class="text-center">None reviewers has been assigned yet.</h3>
+        }
+        <h2>Available reviewers</h2>
+        <div class="col-md-12 row">
+            <div class="col-md-4 col-md-push-4">@Html.TextBoxFor(m => m.SearchPhrase, new { @class = "form-control", placeholder = "Search", Type = "Text" })</div>
+            <div class="input-group-btn col-md-3 col-md-push-4">
+                <button class="btn btn-info btn-fill searchButton" type="submit">Search</button>
+            </div>
+        </div>
+
+        <div class="col-md-12 row">
+            <div class="col-md-2">
+                <label>Results per page</label>
+                @Html.DropDownListFor(m => m.ResultsForPage, new SelectList(new List<int>() { 10, 20, 30, 40, 2 }),
+                       new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-3  col-md-offset-7">
+                <label for="SortBy">Sort by:</label>
+                @Html.DropDownListFor(m => m.SortBy, new List<SelectListItem> { new SelectListItem { Text = "Surname", Value = ArticleReviewSystem.Enums.UserSortBy.Surname.ToString() },
+                       new SelectListItem { Text = "Name", Value = ArticleReviewSystem.Enums.UserSortBy.Name.ToString() },new SelectListItem { Text = "Affiliation", Value = ArticleReviewSystem.Enums.UserSortBy.Affiliation.ToString() } }, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="Results">
+            @if (Model.AvailableReviewers.Count != 0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>Affiliation</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var reviewer in Model.AvailableReviewers)
+                        {
+                            <tr id="clicable-row">
+                                <td>@reviewer.Name</td>
+                                <td>@reviewer.Surname</td>
+                                <td>@reviewer.Affiliation</td>
+                                <td><button class="btn btn-info btn-fill" type="submit" formmethod="post" formaction="@Url.Action("ReviewersAssignAdd","Admin",new { reviewerId= @reviewer.Id })">Assign</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <h3 class="text-center">No available reviewers found</h3>
+            }
+        </div>
+                <div>
+                    <div class="col-md-4 col-md-push-4 text-center row" id="pageControl">
+                        <a href="#" id="backMaxArrow" class="myArrow"><span class="fa fa-angle-double-left"></span></a>
+                        <a href="#" id="backArrow" class="myArrow"><span class="fa fa-angle-left"></span></a>
+                        <span class="currentPage">@Html.DisplayFor(m => m.CurrentPage)</span> from <span class="numberOfPages">@Html.DisplayFor(m => m.NumberOfPages)</span>
+                        <a href="#" id="nextArrow" class="myArrow"><span class="fa fa-angle-right"></span></a>
+                        <a href="#" id="nextMaxArrow" class="myArrow"><span class="fa fa-angle-double-right"></span></a>
+                    </div>
+                </div>
+        }
+    </div>
+</body>
+</html>
