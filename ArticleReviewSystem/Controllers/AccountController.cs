@@ -83,12 +83,12 @@ namespace ArticleReviewSystem.Controllers
 
             if(user == null)
             {
-                ModelState.AddModelError("", "Wrong login or password.");
+                ModelState.AddModelError("", "Wrong login or Password");
                 return View(model);
             }
             if (!user.EmailConfirmed)
             {
-                ModelState.AddModelError("", "The account has not  been verified. Check your email.");
+                ModelState.AddModelError("", "The account has not  been verified. Wait for admin approval");
                 return View();
             }
 
@@ -103,7 +103,7 @@ namespace ArticleReviewSystem.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Wrong login or Password");
                     return View(model);
             }
         }
