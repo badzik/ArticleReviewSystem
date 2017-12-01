@@ -1,0 +1,41 @@
+﻿@using ArticleReviewSystem.Enums.ReviewEnums
+@model ArticleReviewSystem.ViewModels.ReviewViewModel
+<!doctype html>
+
+<link href="~/Content/gsdk.css" rel="stylesheet" />
+
+<html>
+
+<body>
+
+    <div class="main">
+        <div class="container tim-container" style="max-width:800px; padding-top:100px">
+            <h1 class="text-center">Reference Report form</h1>
+            <h4 class="text-center">Nazwa artykułu</h4>
+            <hr />
+@using (Html.BeginForm("AddReview", "Review", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+            <h3>Scope</h3>
+            <div class="panel panel-default">
+                <div class="form-group col-md-12">
+                    @foreach (var value in Enum.GetValues(typeof(Scope)))
+                    {
+                        <label class="radio">
+                            <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                            @Html.RadioButtonFor(m => m.Scope, value)
+                            <a></a>
+                            @value.ToString().Replace("_", " ")
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-8">
+                    <input type="submit" value="Add" class="btn btn-block btn-group-lg btn-info btn-fill" />
+                </div>
+            </div>
+}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+﻿@model ArticleReviewSystem.ViewModels.ArticlesReviewersViewModel
+<!doctype html>
+<script src="~/Scripts/ArticlesReviewersScript.js"></script>
+<html>
+<body>
+    <div class="main">
+        <h1 class="text-center">Articles</h1>
+        <div class="col-md-12 row">
+            <div class="col-md-4 col-md-push-4">@Html.TextBoxFor(m => m.SearchPhrase, new { @class = "form-control", placeholder = "Search", Type = "Text" })</div>
+            <div class="input-group-btn col-md-3 col-md-push-4">
+                <button class="btn btn-info btn-fill submitButton" type="submit">Search</button>
+            </div>
+        </div>
+        @using (Html.BeginForm())
+            {
+            <div class="col-md-12 row">
+                <div class="col-md-2">
+                    <label>Results per page</label>
+                    @Html.DropDownListFor(m => m.ResultsForPage, new SelectList(new List<int>() { 10, 20, 30, 40, 2 }),
+                       new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-3  col-md-offset-7">
+                    <label for="SortBy">Sort by:</label>
+                    @Html.DropDownListFor(m => m.SortBy, new List<SelectListItem> { new SelectListItem { Text = "Title", Value = ArticleReviewSystem.Enums.ArticleSortBy.Title.ToString() },new SelectListItem { Text = "Add date", Value = ArticleReviewSystem.Enums.ArticleSortBy.AddDate.ToString() } }, new { @class = "form-control" })
+                </div>
+            </div>
+                <div class="Results">
+                    @if (Model.Articles.Count != 0)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Article Title</th>
+                                    <th>Add date</th>
+                                    <th>Status</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var article in Model.Articles)
+                                {
+                                    <tr id="clicable-row">
+                                        <td>@article.Title</td>
+                                        <td>@article.Date.Day.@article.Date.Month.@article.Date.Year</td>
+                                        @if (article.Status == ArticleReviewSystem.Enums.ArticleStatus.WaitingToAssignReviewers)
+                                        {
+                                            <td><a class="btn btn-info btn-fill" href="@Url.Action("AddReview", "Review", new { articleId = article.ArticleId })">Add Review</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@article.Status.ToString()</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h3 class="text-center">No articles to review</h3>
+                    }
+                </div>
+                <div>
+                    <div class="col-md-4 col-md-push-4 text-center row" id="pageControl">
+                        <a href="#" id="backMaxArrow" class="myArrow"><span class="fa fa-angle-double-left"></span></a>
+                        <a href="#" id="backArrow" class="myArrow"><span class="fa fa-angle-left"></span></a>
+                        <span class="currentPage">@Html.DisplayFor(m => m.CurrentPage)</span> from <span class="numberOfPages">@Html.DisplayFor(m => m.NumberOfPages)</span>
+                        <a href="#" id="nextArrow" class="myArrow"><span class="fa fa-angle-right"></span></a>
+                        <a href="#" id="nextMaxArrow" class="myArrow"><span class="fa fa-angle-double-right"></span></a>
+                    </div>
+                </div>
+        }
+    </div>
+</body>
+</html>

@@ -191,6 +191,20 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Enums\ArticleSortBy.cs" />
+    <Compile Include="Enums\ReviewEnums\AbbereviationsFormulaeUnits.cs" />
+    <Compile Include="Enums\ReviewEnums\Abstract.cs" />
+    <Compile Include="Enums\ReviewEnums\ConclusionDrawn.cs" />
+    <Compile Include="Enums\ReviewEnums\Content.cs" />
+    <Compile Include="Enums\ReviewEnums\FinalRecommendation.cs" />
+    <Compile Include="Enums\ReviewEnums\Illustrations.cs" />
+    <Compile Include="Enums\ReviewEnums\Language.cs" />
+    <Compile Include="Enums\ReviewEnums\LiteratureFeferences.cs" />
+    <Compile Include="Enums\ReviewEnums\OverallEvaluation.cs" />
+    <Compile Include="Enums\ReviewEnums\Presentation.cs" />
+    <Compile Include="Enums\ReviewEnums\Scope.cs" />
+    <Compile Include="Enums\ReviewEnums\Tables.cs" />
+    <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Helpers\EmailSender.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -216,6 +230,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ArticlesReviewersViewModel.cs" />
     <Compile Include="ViewModels\CoAuthorViewModel.cs" />
     <Compile Include="ViewModels\RegisterConfirmationViewModel.cs" />
   </ItemGroup>
@@ -303,10 +318,11 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Article\AddArticle.cshtml" />
     <Content Include="Views\Admin\RegisterConfirmation.cshtml" />
+    <Content Include="Views\Review\ArticlesForReview.cshtml" />
+    <Content Include="Views\Review\AddReview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Review\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

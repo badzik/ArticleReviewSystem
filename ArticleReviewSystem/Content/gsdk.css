@@ -378,7 +378,7 @@ input.ct-red + span + label + span.switch-right {
   font-size: 16px;
   padding: 8px 16px; }
 
-.btn-lg {
+/*.btn-lg {
   font-size: 18px;
   border-radius: 6px;
   padding: 14px 30px;
@@ -386,7 +386,7 @@ input.ct-red + span + label + span.switch-right {
   .btn-lg.btn-round {
     padding: 15px 30px; }
   .btn-lg.btn-simple {
-    padding: 16px 30px; }
+    padding: 16px 30px; }*/
 
 .btn-sm {
   font-size: 12px;
