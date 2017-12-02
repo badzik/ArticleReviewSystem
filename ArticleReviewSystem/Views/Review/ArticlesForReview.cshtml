@@ -44,7 +44,7 @@
                                         <td>@article.Date.Day.@article.Date.Month.@article.Date.Year</td>
                                         @if (article.Status == ArticleReviewSystem.Enums.ArticleStatus.WaitingToAssignReviewers)
                                         {
-                                            <td><a class="btn btn-info btn-fill" href="@Url.Action("AddReview", "Review", new { articleId = article.ArticleId })">Add Review</a></td>
+                                            <td><a class="btn btn-info btn-fill" href="@Url.Action("AddReview", "Review", new { articleID = article.ArticleId })">Add Review</a></td>
                                         }
                                         else
                                         {

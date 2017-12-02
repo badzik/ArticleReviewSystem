@@ -6,14 +6,12 @@ using System.Web;
 
 namespace ArticleReviewSystem.Enums.ReviewEnums
 {
-    public enum Tables
+    public enum LiteratureReferences
     {
-        [Display(Name = "Adequate")]
-        Adequate,
-        [Display(Name = "Should be rearranged to improve clarity")]
-        ShouldBeRearrangedToImproveClarity,
-        [Display(Name = "Some may be omitted")]
-        SomeMayBeOmitted,
+        Adequate, 
+        Inadequate,
+        [Display(Name = "Some may be ommitted")]
+        SomeMayBeOmmitted,
         [Display(Name = "More should be added (Write in a detailed comment)")]
         MoreShouldBeAdded
     }

@@ -9,7 +9,44 @@ namespace ArticleReviewSystem.ViewModels
 {
     public class ReviewViewModel
     {
-        //Required dont work. I use nullable enum and i must check it in code (controler)
+        public string ArticleName { get; set; }
+        [Required(ErrorMessage ="This field is required")]
+        [EnumDataType(typeof(Scope))]
         public Scope? Scope { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(Illustrations))]
+        public Illustrations? Illustrations { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(Content))]
+        public Content? Content { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(Tables))]
+        public Tables? Tables { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(ConclusionDrawn))]
+        public ConclusionDrawn? ConclusionDrawn { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(AbbereviationsFormulaeUnits))]
+        public AbbereviationsFormulaeUnits? AbbereviationsFormulaeUnits { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(LiteratureReferences))]
+        public LiteratureReferences? LiteratureReferences { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(Presentation))]
+        public Presentation? Presentation { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(OverallEvaluation))]
+        public OverallEvaluation? OverallEvaluation { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(Language))]
+        public Language? Language { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(Abstract))]
+        public Abstract? Abstract{ get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        [EnumDataType(typeof(FinalRecommendation))]
+        public FinalRecommendation? FinalRecommendation { get; set; } = null;
+        [Required(ErrorMessage = "This field is required")]
+        public string DetailComments { get; set; }
     }
 }

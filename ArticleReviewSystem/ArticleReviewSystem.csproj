@@ -199,11 +199,12 @@
     <Compile Include="Enums\ReviewEnums\FinalRecommendation.cs" />
     <Compile Include="Enums\ReviewEnums\Illustrations.cs" />
     <Compile Include="Enums\ReviewEnums\Language.cs" />
-    <Compile Include="Enums\ReviewEnums\LiteratureFeferences.cs" />
+    <Compile Include="Enums\ReviewEnums\LiteratureReferences.cs" />
     <Compile Include="Enums\ReviewEnums\OverallEvaluation.cs" />
     <Compile Include="Enums\ReviewEnums\Presentation.cs" />
     <Compile Include="Enums\ReviewEnums\Scope.cs" />
     <Compile Include="Enums\ReviewEnums\Tables.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Helpers\EmailSender.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

@@ -1,4 +1,5 @@
 ﻿@using ArticleReviewSystem.Enums.ReviewEnums
+@using ArticleReviewSystem.Extensions
 @model ArticleReviewSystem.ViewModels.ReviewViewModel
 <!doctype html>
 
@@ -7,34 +8,298 @@
 <html>
 
 <body>
-
     <div class="main">
         <div class="container tim-container" style="max-width:800px; padding-top:100px">
             <h1 class="text-center">Reference Report form</h1>
-            <h4 class="text-center">Nazwa artykułu</h4>
+            <h4 class="text-center">@Model.ArticleName</h4>
             <hr />
-@using (Html.BeginForm("AddReview", "Review", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-            <h3>Scope</h3>
-            <div class="panel panel-default">
-                <div class="form-group col-md-12">
-                    @foreach (var value in Enum.GetValues(typeof(Scope)))
-                    {
-                        <label class="radio">
-                            <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
-                            @Html.RadioButtonFor(m => m.Scope, value)
-                            <a></a>
-                            @value.ToString().Replace("_", " ")
-                        </label>
-                    }
+            @using (Html.BeginForm("AddReview", "Review", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <h3>Scope</h3>
+                @Html.ValidationMessageFor(m => m.Scope, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Scope)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Scope?;
+                            if (Model.Scope == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Scope, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-8">
-                    <input type="submit" value="Add" class="btn btn-block btn-group-lg btn-info btn-fill" />
+                <h3>Illustrations</h3>
+                @Html.ValidationMessageFor(m => m.Illustrations, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Illustrations)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Illustrations?;
+                            if (Model.Illustrations == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Illustrations, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
                 </div>
-            </div>
-}
+                <h3>Content</h3>
+                @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Content)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Content?;
+                            if (Model.Content == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Content, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Tables</h3>
+                @Html.ValidationMessageFor(m => m.Tables, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Tables)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Tables?;
+                            if (Model.Tables == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Tables, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Conclusion drawn</h3>
+                @Html.ValidationMessageFor(m => m.ConclusionDrawn, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(ConclusionDrawn)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as ConclusionDrawn?;
+                            if (Model.ConclusionDrawn == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.ConclusionDrawn, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Abbreviations, formulae, units</h3>
+                @Html.ValidationMessageFor(m => m.AbbereviationsFormulaeUnits, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(AbbereviationsFormulaeUnits)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as AbbereviationsFormulaeUnits?;
+                            if (Model.AbbereviationsFormulaeUnits == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.AbbereviationsFormulaeUnits, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Literature references</h3>
+                @Html.ValidationMessageFor(m => m.LiteratureReferences, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(LiteratureReferences)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as LiteratureReferences?;
+                            if (Model.LiteratureReferences == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.LiteratureReferences, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Presentation</h3>
+                @Html.ValidationMessageFor(m => m.Presentation, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Presentation)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Presentation?;
+                            if (Model.Presentation == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Presentation, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Language</h3>
+                @Html.ValidationMessageFor(m => m.Language, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Language)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Language?;
+                            if (Model.Language == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Language, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Overall evaluation</h3>
+                @Html.ValidationMessageFor(m => m.OverallEvaluation, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(OverallEvaluation)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as OverallEvaluation?;
+                            if (Model.OverallEvaluation == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.OverallEvaluation, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Abstract</h3>
+                @Html.ValidationMessageFor(m => m.Abstract, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(Abstract)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as Abstract?;
+                            if (Model.Abstract == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.Abstract, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <h3>Final recommendation</h3>
+                @Html.ValidationMessageFor(m => m.FinalRecommendation, "", new { @class = "text-danger" })
+                <div class="panel panel-default">
+                    <div class="form-group col-md-12">
+                        @foreach (var value in Enum.GetValues(typeof(FinalRecommendation)))
+                        {
+                            string radioChecked = String.Empty;
+                            var enumValue = value as FinalRecommendation?;
+                            if (Model.FinalRecommendation == enumValue)
+                            {
+                                radioChecked = "checked";
+                            }
+                            <label class="radio @radioChecked">
+                                <span class="icons"><span class="first-icon fa fa-circle-o"></span><span class="second-icon fa fa-dot-circle-o"></span></span>
+                                @Html.RadioButtonFor(m => m.FinalRecommendation, value)
+                                <a></a>
+                                @enumValue.GetDisplayName()
+                            </label>
+                        }
+                    </div>
+                </div>
+                <td><a data-toggle="modal" data-id="test" class="open-deleteDialog btn btn-block btn-fill btn-danger" data-target="#addReviewModal">Delete</a></td>
+                <h3>Detail Comments</h3>
+                @Html.ValidationMessageFor(m => m.DetailComments, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="panel">
+                        @Html.TextAreaFor(m => m.DetailComments, new { @class = "form-control", rows = 20 })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-8">
+                        <input type="submit" value="Send review" class="btn btn-block btn-group-lg btn-info btn-fill" data-target="#addReviewModal" />
+                    </div>
+                </div>
+                <div class="modal fade" id="addReviewModal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">Referene report form</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Do you really want send this review ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <input type="submit" value="Send review" class="btn btn-warning">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </body>
