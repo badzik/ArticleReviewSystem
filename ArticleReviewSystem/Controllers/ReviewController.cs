@@ -2,8 +2,11 @@
 using ArticleReviewSystem.Enums.ReviewEnums;
 using ArticleReviewSystem.Models;
 using ArticleReviewSystem.ViewModels;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -19,9 +22,7 @@ namespace ArticleReviewSystem.Controllers
         {
             ArticlesReviewersViewModel articlesReviewersViewModel = new ArticlesReviewersViewModel();
             ApplicationDbContext dbContext = new ApplicationDbContext();
-            ////TODO: check working this element. Should show article only for this user. Now i want see every article 
             articlesReviewersViewModel.Articles = dbContext.Articles.Where(x => x.Reviews.Any(y => y.Reviewer.UserName == User.Identity.Name)).OrderBy(a => a.Reviews.Count).Take(10).ToList();
-            //articlesReviewersViewModel.Articles = dbContext.Articles.OrderBy(a => a.Reviews.Count).Take(10).ToList();
             articlesReviewersViewModel.CurrentPage = 1;
             articlesReviewersViewModel.ResultsForPage = 10;
             articlesReviewersViewModel.SortBy = Enums.ArticleSortBy.NumberOfAssignedReviewersAsc;
@@ -38,7 +39,8 @@ namespace ArticleReviewSystem.Controllers
             {
                 article= dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID);
                 var authorization = article.Reviews.Any(y => y.Reviewer.UserName == User.Identity.Name);
-                if (!authorization)
+                var emptyReview = dbContext.Reviews.SingleOrDefault(x => x.Reviewer.UserName == User.Identity.Name && x.RelatedArticle.ArticleId == article.ArticleId);
+                if (!authorization || emptyReview.FinalRecommendation != null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -78,5 +80,21 @@ namespace ArticleReviewSystem.Controllers
             return RedirectToAction("ArticlesForReview", "Review");
         }
 
+        public ActionResult ShowPDF(int? articleID)
+        {
+           Review  review = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID).
+                Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name);
+            var builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
+    return builder.GetPdf();
+        }
+
+        public ActionResult PDF(int? articleID)
+        {
+            //TODO: only temporary view
+            Review review = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID).
+                 Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name);
+            var builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
+            return View();
+        }
     }
 }
