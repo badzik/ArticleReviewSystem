@@ -1,4 +1,5 @@
 ﻿using ArticleReviewSystem.Enums.ReviewEnums;
+using ArticleReviewSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,8 @@ namespace ArticleReviewSystem.ViewModels
 {
     public class ReviewViewModel
     {
-        public string ArticleName { get; set; }
+        public string ArticleTitle { get; set; }
+        public int ArticleID { get; set; }
         [Required(ErrorMessage ="This field is required")]
         [EnumDataType(typeof(Scope))]
         public Scope? Scope { get; set; } = null;

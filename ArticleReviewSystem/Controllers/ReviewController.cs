@@ -47,7 +47,7 @@ namespace ArticleReviewSystem.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View(new ReviewViewModel { ArticleName = article.Title});
+            return View(new ReviewViewModel { ArticleTitle = article.Title, ArticleID = article.ArticleId});
         }
         [Authorize]
         [HttpPost]
@@ -57,29 +57,25 @@ namespace ArticleReviewSystem.Controllers
             {
                 return View(model);
             }
+            //TODO: add 'updating article status' I need waiting on Becia
+            var article = dbContext.Articles.SingleOrDefault(m => m.ArticleId == model.ArticleID);
             var reviewStatus = (ReviewStatus) Enum.Parse(typeof(ReviewStatus), model.FinalRecommendation.ToString()) ;
-            Review review = new Review
-            {
-                AbbreviationsFormulaeUnits = model.AbbereviationsFormulaeUnits.ToString(),
-                Abstract = model.Abstract.ToString(),
-                ConclusionDraw = model.ConclusionDrawn.ToString(),
-                Content = model.Content.ToString(),
-                FinalRecommendation = model.FinalRecommendation.ToString(),
-                Illustrations = model.Illustrations.ToString(),
-                Language = model.Language.ToString(),
-                LiteratureReferences = model.LiteratureReferences.ToString(),
-                OverallEvaluation = model.OverallEvaluation.ToString(),
-                Presentation = model.Presentation.ToString(),
-                Scope = model.Scope.ToString(),
-                Tables = model.Tables.ToString(),
-                Status = reviewStatus
-            };
-            //its update nod added new row becouse Bartek create empty review.
-            //modal probably need ajax becouse i need show this only when model.isValid.
-           
-
-
-            return View(model);
+            var emptyReview = dbContext.Reviews.SingleOrDefault(x => x.Reviewer.UserName == User.Identity.Name && x.RelatedArticle.ArticleId == article.ArticleId);
+            emptyReview.AbbreviationsFormulaeUnits = model.AbbereviationsFormulaeUnits.ToString();
+            emptyReview.Abstract = model.Abstract.ToString();
+            emptyReview.ConclusionDraw = model.ConclusionDrawn.ToString();
+            emptyReview.Content = model.Content.ToString();
+            emptyReview.FinalRecommendation = model.FinalRecommendation.ToString();
+            emptyReview.Illustrations = model.Illustrations.ToString();
+            emptyReview.Language = model.Language.ToString();
+            emptyReview.LiteratureReferences = model.LiteratureReferences.ToString();
+            emptyReview.OverallEvaluation = model.OverallEvaluation.ToString();
+            emptyReview.Presentation = model.Presentation.ToString();
+            emptyReview.Scope = model.Scope.ToString();
+            emptyReview.Tables = model.Tables.ToString();
+            emptyReview.Status = reviewStatus;
+            dbContext.SaveChanges();
+            return RedirectToAction("ArticlesForReview", "Review");
         }
 
     }

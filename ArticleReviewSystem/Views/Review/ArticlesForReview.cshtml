@@ -11,6 +11,7 @@
                 <button class="btn btn-info btn-fill submitButton" type="submit">Search</button>
             </div>
         </div>
+        @*TODO: add working search. I will waitning to Bartek*@
         @using (Html.BeginForm())
             {
             <div class="col-md-12 row">
@@ -42,13 +43,14 @@
                                     <tr id="clicable-row">
                                         <td>@article.Title</td>
                                         <td>@article.Date.Day.@article.Date.Month.@article.Date.Year</td>
-                                        @if (article.Status == ArticleReviewSystem.Enums.ArticleStatus.WaitingToAssignReviewers)
+                                        <td>@article.Reviews.SingleOrDefault(m => m.Reviewer.UserName == User.Identity.Name).Status.ToString()</td>
+                                        @if (article.Reviews.SingleOrDefault(m => m.Reviewer.UserName == User.Identity.Name).Status == ArticleReviewSystem.Enums.ReviewStatus.NotReviewedYet)
                                         {
                                             <td><a class="btn btn-info btn-fill" href="@Url.Action("AddReview", "Review", new { articleID = article.ArticleId })">Add Review</a></td>
                                         }
                                         else
                                         {
-                                            <td>@article.Status.ToString()</td>
+                                            <td><a class="btn btn-info btn-fill" href="@Url.Action("ShowPdf", "Review", new { articleID = article.ArticleId })">Show PDF</a></td>
                                         }
                                     </tr>
                                 }
