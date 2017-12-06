@@ -2,7 +2,7 @@
 
 <div class="Results">
     @if (Model.AvailableReviewers.Count != 0)
-            {
+    {
         <table class="table">
             <thead>
                 <tr>
@@ -13,14 +13,13 @@
                 </tr>
             </thead>
             <tbody>
-                @Html.HiddenFor(m => m.MaxPages)
                 @foreach (var reviewer in Model.AvailableReviewers)
                 {
                     <tr id="clicable-row">
                         <td>@reviewer.Name</td>
                         <td>@reviewer.Surname</td>
                         <td>@reviewer.Affiliation</td>
-                        <td><a class="btn btn-info btn-fill addReviewer" href="#" data-value=@reviewer.Id>Assign</a></td>
+                        <td><button class="btn btn-info btn-fill" type="submit" formmethod="post" formaction="@Url.Action("ReviewersAssignAdd","Admin",new { reviewerId= @reviewer.Id,articleId=@Model.ArticleId })">Assign</button></td>
                     </tr>
                 }
             </tbody>
@@ -31,4 +30,6 @@
         <h3 class="text-center">No available reviewers found</h3>
     }
 </div>
+
+
 

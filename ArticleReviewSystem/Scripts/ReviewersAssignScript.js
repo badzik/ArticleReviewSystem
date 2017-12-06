@@ -1,4 +1,11 @@
 ﻿$(document).ready(function ($) {
+    $('#SearchPhrase').keypress(function (e) {
+        if (e.which == 13) {
+            $(".searchButton").click();
+            return false;
+        }
+    });
+
     $('#myForm').submit(function (eventObj) {
         var currentPage = parseInt($.trim($(".currentPage").text()), 10);
         var numberOfPages = parseInt($.trim($(".numberOfPages").text()), 10);
@@ -99,10 +106,19 @@
         };
         var articleId= getUrlParameter("articleId");
 
+        var assignedCounter = $("#AssignedReviewers_Count").val();
+        var assignedIds = new Array();
+
+        for (i = 0; i < assignedCounter; i++)
+        {
+            assignedIds[i]=($("#AssignedReviewers_"+i+"__Id").val());
+        }
+
+
         return $.ajax({
             url: '/Admin/ReviewersSearchAssign',
             type: 'POST',
-            data: {ram : model,articleId},
+            data: {ram : model,articleId,assignedIds},
             datatype: "html",
             success: function (html) {
                 $('.Results').replaceWith(html);

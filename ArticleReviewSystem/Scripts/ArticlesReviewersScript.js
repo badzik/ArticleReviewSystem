@@ -1,4 +1,11 @@
 ﻿$(document).ready(function ($) {
+    $('#SearchPhrase').keypress(function (e) {
+        if (e.which == 13) {
+            $(".submitButton").click();
+            return false;
+        }
+    });
+
     $(".submitButton").click(function (event) {
         event.preventDefault();
         $.when(makeAjax()).done(function () {

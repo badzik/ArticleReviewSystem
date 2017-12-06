@@ -1,4 +1,5 @@
 ﻿@model ArticleReviewSystem.PartialModels.ArticlesReviewersPartialModel
+@using ArticleReviewSystem.Helpers
 
 <div class="Results">
     @if (Model.Articles.Count != 0)
@@ -9,6 +10,7 @@
                 <th>Article Title</th>
                 <th>Author</th>
                 <th>Add date</th>
+                <th>Status</th>
                 <th>Reviewers count</th>
                 <th> </th>
             </tr>
@@ -21,6 +23,7 @@
                     <td>@article.Title</td>
                     <td>@article.MainAuthor.Name @article.MainAuthor.Surname</td>
                     <td>@article.Date.Day.@article.Date.Month.@article.Date.Year</td>
+                    <td>@EnumExtensions.DisplayName(article.Status)</td>
                     <td>@article.Reviews.Count</td>
                     <td><a class="btn btn-info btn-fill" href="@Url.Action("ReviewersAssign", "Admin", new { articleId = article.ArticleId })">Edit</a></td>
                 </tr>

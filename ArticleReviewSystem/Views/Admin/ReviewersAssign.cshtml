@@ -12,6 +12,7 @@
             {
                     <div class="panel panel-primary" style="background-color: #EEE">
                         @Html.HiddenFor(m => m.Article.ArticleId)
+                        @Html.HiddenFor(m => m.AssignedReviewers.Count)
                         <h2>Assigned reviewers</h2>
                         @if (Model.AssignedReviewers.Count != 0)
                         {
@@ -32,7 +33,7 @@
                                             <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Name)</td>
                                             <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Surname)</td>
                                             <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Affiliation)</td>
-                                            <td><button class="btn btn-danger deleteReviewer" href="#" formmethod="post" formaction="@Url.Action("ReviewersAssignDelete","Admin",new { reviewerId= Model.AssignedReviewers[i].Id })">Remove</button></td>
+                                            <td><button class="btn btn-danger deleteReviewer" href="#" formmethod="post" formaction="@Url.Action("ReviewersAssignDelete","Admin",new { reviewerId= Model.AssignedReviewers[i].Id, articleId=Model.Article.ArticleId })">Remove</button></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -84,7 +85,7 @@
                                             <td>@reviewer.Name</td>
                                             <td>@reviewer.Surname</td>
                                             <td>@reviewer.Affiliation</td>
-                                            <td><button class="btn btn-info btn-fill" type="submit" formmethod="post" formaction="@Url.Action("ReviewersAssignAdd","Admin",new { reviewerId= @reviewer.Id })">Assign</button></td>
+                                            <td><button class="btn btn-info btn-fill" type="submit" formmethod="post" formaction="@Url.Action("ReviewersAssignAdd","Admin",new { reviewerId= @reviewer.Id, articleId=@Model.Article.ArticleId })">Assign</button></td>
                                         </tr>
                                     }
                                 </tbody>

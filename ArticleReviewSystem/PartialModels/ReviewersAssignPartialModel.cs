@@ -9,6 +9,7 @@ namespace ArticleReviewSystem.PartialModels
     public class ReviewersAssignPartialModel
     {
         public List<ApplicationUser> AvailableReviewers { get; set; }
+        public int ArticleId { get; set; }
         public int MaxPages { get; set; }
     }
 }
