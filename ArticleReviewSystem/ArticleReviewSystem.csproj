@@ -217,11 +217,12 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\ArticlesReviewersPartialModel.cs" />
+    <Compile Include="PartialModels\ArticlesReviewersPartialModel.cs" />
     <Compile Include="ViewModels\ArticlesReviewersViewModel.cs" />
     <Compile Include="ViewModels\CoAuthorViewModel.cs" />
+    <Compile Include="PartialModels\RegisterConfirmationPartialModel.cs" />
     <Compile Include="ViewModels\RegisterConfirmationViewModel.cs" />
-    <Compile Include="ViewModels\ReviewersAssignPartialModel.cs" />
+    <Compile Include="PartialModels\ReviewersAssignPartialModel.cs" />
     <Compile Include="ViewModels\ReviewersAssignViewModel.cs" />
     <Compile Include="ViewModels\SimpleUser.cs" />
   </ItemGroup>
@@ -270,6 +271,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\RegisterConfirmationScript.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\ReviewersAssignScript.js" />
@@ -315,6 +317,7 @@
     <Content Include="Views\Admin\ArticlesReviewers.cshtml" />
     <Content Include="Views\Admin\_ArticlesReviewers.cshtml" />
     <Content Include="Views\Admin\_ReviewersAssign.cshtml" />
+    <Content Include="Views\Admin\_RegisterConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

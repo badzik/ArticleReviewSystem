@@ -1,8 +1,7 @@
 ﻿using ArticleReviewSystem.Enums;
 using ArticleReviewSystem.Models;
+using ArticleReviewSystem.PartialModels;
 using ArticleReviewSystem.ViewModels;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace ArticleReviewSystem.Controllers
 {
@@ -32,8 +30,40 @@ namespace ArticleReviewSystem.Controllers
         {
             RegisterConfirmationViewModel rcVM = new RegisterConfirmationViewModel();
             ApplicationDbContext dbContext = new ApplicationDbContext();
-            rcVM.UnconfirmedUsers = dbContext.Users.Where(m => !m.EmailConfirmed).ToList();
+            rcVM.UnconfirmedUsers = dbContext.Users.Where(m => !m.EmailConfirmed).OrderBy(a => a.Surname).Take(10).ToList();
+            rcVM.CurrentPage = 1;
+            rcVM.ResultsForPage = 10;
+            rcVM.SortBy = Enums.UserSortBy.Surname;
+            rcVM.NumberOfPages = (int)Math.Ceiling((double)dbContext.Users.Where(m => !m.EmailConfirmed).Count() / rcVM.ResultsForPage);
             return View(rcVM);
+        }
+
+        [HttpPost]
+        public ActionResult RegisterConfirmation(RegisterConfirmationViewModel rcvm)
+        {
+            RegisterConfirmationPartialModel rcpm = new RegisterConfirmationPartialModel();
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            List<ApplicationUser> unconfirmedUsers = new List<ApplicationUser>();
+            unconfirmedUsers = dbContext.Users.Where(m => !m.EmailConfirmed).ToList();
+            if (!String.IsNullOrEmpty(rcvm.SearchPhrase))
+            {
+                unconfirmedUsers = unconfirmedUsers.Where(a => a.Name.ToLower().Contains(rcvm.SearchPhrase.ToLower()) || a.Surname.ToLower().Contains(rcvm.SearchPhrase.ToLower()) || a.Affiliation.ToLower().Contains(rcvm.SearchPhrase.ToLower())).ToList();
+            }
+            switch (rcvm.SortBy)
+            {
+                case UserSortBy.Name:
+                    unconfirmedUsers = unconfirmedUsers.OrderBy(r => r.Name).ToList();
+                    break;
+                case UserSortBy.Surname:
+                    unconfirmedUsers = unconfirmedUsers.OrderBy(r => r.Surname).ToList();
+                    break;
+                case UserSortBy.Affiliation:
+                    unconfirmedUsers = unconfirmedUsers.OrderBy(r => r.Affiliation).ToList();
+                    break;
+            }
+            rcpm.MaxPages = (int)Math.Ceiling((double)unconfirmedUsers.Count / (double)rcvm.ResultsForPage);
+            rcpm.UnconfirmedUsers = unconfirmedUsers.Skip((rcvm.CurrentPage - 1) * rcvm.ResultsForPage).Take(rcvm.ResultsForPage).ToList();
+            return PartialView("_RegisterConfirmation", rcpm);
         }
 
         public async Task<ActionResult> ConfirmRegistration(string userId)
@@ -119,7 +149,7 @@ namespace ArticleReviewSystem.Controllers
             }
 
             var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
-            ravm.AvailableReviewers = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(ravm.Article.MainAuthor.Affiliation.ToLower())).ToList();
+            ravm.AvailableReviewers = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(ravm.Article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
 
 
             ravm.AvailableReviewers = ravm.AvailableReviewers.OrderBy(r => r.Surname).ToList();
@@ -156,7 +186,7 @@ namespace ArticleReviewSystem.Controllers
 
 
             var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
-            available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower())).ToList();
+            available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
             foreach (SimpleUser s in assigned)
             {
                 var toRemove = available.FirstOrDefault(a=>a.Id==s.Id);
@@ -212,7 +242,7 @@ namespace ArticleReviewSystem.Controllers
             }
 
             var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
-            available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower())).ToList();
+            available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
             foreach (SimpleUser s in assigned)
             {
                 var toRemove = available.FirstOrDefault(a => a.Id == s.Id);
@@ -257,7 +287,7 @@ namespace ArticleReviewSystem.Controllers
             Article article= dbContext.Articles.Find(articleId);
 
             var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
-            reviewers = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower())).ToList();
+            reviewers = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
 
             if (!String.IsNullOrEmpty(ram.SearchPhrase))
             {

@@ -1,49 +1,78 @@
 ﻿@model ArticleReviewSystem.ViewModels.RegisterConfirmationViewModel
 
 <!doctype html>
-
+<script src="~/Scripts/RegisterConfirmationScript.js"></script>
 <html>
 <body>
     <div class="main">
         <div class="container tim-container" style="max-width:800px; padding-top:100px">
             <h1 class="text-center">Registration confirmation</h1>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Surname</th>
-                        <th>Affiliation</th>
-                        <th>Email address</th>
-                        <th>Register date</th>
-                        <th>Confirmation email send date</th>
-                        <th> </th>
-                        <th> </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model.UnconfirmedUsers)
-                    {
-                        <tr>
-                            <td>@user.Name</td>
-                            <td>@user.Surname</td>
-                            <td>@user.Affiliation</td>
-                            <td>@user.Email</td>
-                            <td>@user.RegistrationDate</td>
-                            @if (user.ConfirmRegistrationDate == null)
+            <div class="col-md-12 row">
+                <div class="col-md-4 col-md-push-4">@Html.TextBoxFor(m => m.SearchPhrase, new { @class = "form-control", placeholder = "Search", Type = "Text" })</div>
+                <div class="input-group-btn col-md-3 col-md-push-4">
+                    <button class="btn btn-info btn-fill submitButton" type="submit">Search</button>
+                </div>
+            </div>
+                <div class="col-md-12 row">
+                    <div class="col-md-2">
+                        <label>Results per page</label>
+                        @Html.DropDownListFor(m => m.ResultsForPage, new SelectList(new List<int>() { 10, 20, 30, 40 }),
+            new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-3  col-md-offset-7">
+                        <label for="SortBy">Sort by:</label>
+                        @Html.DropDownListFor(m => m.SortBy, new List<SelectListItem> { new SelectListItem { Text = "Surname", Value = ArticleReviewSystem.Enums.UserSortBy.Surname.ToString() },
+                       new SelectListItem { Text = "Name", Value = ArticleReviewSystem.Enums.UserSortBy.Name.ToString() },new SelectListItem { Text = "Affiliation", Value = ArticleReviewSystem.Enums.UserSortBy.Affiliation.ToString() } }, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="Results">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Affiliation</th>
+                                <th>Email address</th>
+                                <th>Register date</th>
+                                <th>Confirmation email send date</th>
+                                <th> </th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.UnconfirmedUsers)
                             {
-                                <td>-</td>
-                                <td><button onclick="location.href='@Url.Action("ConfirmRegistration", "Admin", new { userId = user.Id })'" class="btn btn-block btn-fill btn-success">Confirm</button></td>
+                                <tr>
+                                    <td>@user.Name</td>
+                                    <td>@user.Surname</td>
+                                    <td>@user.Affiliation</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.RegistrationDate</td>
+                                    @if (user.ConfirmRegistrationDate == null)
+                                    {
+                                        <td>-</td>
+                                        <td><button onclick="location.href='@Url.Action("ConfirmRegistration", "Admin", new { userId = user.Id })'" class="btn btn-block btn-fill btn-success">Confirm</button></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@user.ConfirmRegistrationDate</td>
+                                        <td><button onclick="location.href='@Url.Action("ConfirmRegistration", "Admin", new { userId = user.Id })'" class="btn btn-block btn-fill btn-info">Resend</button></td>
+                                    }
+                                    <td><a data-toggle="modal" data-id="@user.Id" class="open-deleteDialog btn btn-block btn-fill btn-danger" data-target="#deleteModal">Delete</a></td>
+                                </tr>
                             }
-                            else
-                            {
-                                <td>@user.ConfirmRegistrationDate</td>
-                                <td><button onclick="location.href='@Url.Action("ConfirmRegistration", "Admin", new { userId = user.Id })'" class="btn btn-block btn-fill btn-info">Resend</button></td>
-                            }
-                            <td><a data-toggle="modal" data-id="@user.Id" class="open-deleteDialog btn btn-block btn-fill btn-danger" data-target="#deleteModal">Delete</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="col-md-4 col-md-push-4 text-center row" id="pageControl">
+                        <a href="#" id="backMaxArrow" class="myArrow"><span class="fa fa-angle-double-left"></span></a>
+                        <a href="#" id="backArrow" class="myArrow"><span class="fa fa-angle-left"></span></a>
+                        <span class="currentPage">@Html.DisplayFor(m => m.CurrentPage)</span> from <span class="numberOfPages">@Html.DisplayFor(m => m.NumberOfPages)</span>
+                        <a href="#" id="nextArrow" class="myArrow"><span class="fa fa-angle-right"></span></a>
+                        <a href="#" id="nextMaxArrow" class="myArrow"><span class="fa fa-angle-double-right"></span></a>
+                    </div>
+                </div>
         </div>
     </div>
 

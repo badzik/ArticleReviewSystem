@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ArticleReviewSystem.ViewModels
+namespace ArticleReviewSystem.PartialModels
 {
-    public class ReviewersAssignPartialModel
+    public class RegisterConfirmationPartialModel
     {
-        public List<ApplicationUser> AvailableReviewers { get; set; }
+        public List<ApplicationUser> UnconfirmedUsers { get; set; }
         public int MaxPages { get; set; }
     }
 }
