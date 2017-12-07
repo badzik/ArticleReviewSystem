@@ -15,7 +15,7 @@ namespace ArticleReviewSystem.ViewModels
         public int CurrentPage { get; set; }
         public int NumberOfPages { get; set; }
         public int ResultsForPage { get; set; }
-        public List<SimpleUser> AssignedReviewers { get; set; }
+        public List<SimpleReviewer> AssignedReviewers { get; set; }
         public List<ApplicationUser> AvailableReviewers { get; set; }
     }
 }

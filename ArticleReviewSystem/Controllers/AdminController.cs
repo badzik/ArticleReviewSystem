@@ -89,7 +89,7 @@ namespace ArticleReviewSystem.Controllers
         {
             ArticlesReviewersViewModel arvm = new ArticlesReviewersViewModel();
             ApplicationDbContext dbContext = new ApplicationDbContext();
-            arvm.Articles = dbContext.Articles.OrderBy(a => a.Reviews.Count).Take(10).ToList();
+            arvm.Articles = dbContext.Articles.Where(a=>a.Status!=ArticleStatus.PositivelyReviewed && a.Status!=ArticleStatus.NegativelyReviewed && a.Status!=ArticleStatus.MinorChangesWithoutNewReview).OrderBy(a => a.Reviews.Count).Take(10).ToList();
             arvm.CurrentPage = 1;
             arvm.ResultsForPage = 10;
             arvm.SortBy = Enums.ArticleSortBy.NumberOfAssignedReviewersAsc;
@@ -103,13 +103,10 @@ namespace ArticleReviewSystem.Controllers
             ArticlesReviewersPartialModel nArpm = new ArticlesReviewersPartialModel();
             ApplicationDbContext dbContext = new ApplicationDbContext();
             List<Article> articles = new List<Article>();
+            articles = dbContext.Articles.Where(a => a.Status != ArticleStatus.PositivelyReviewed && a.Status != ArticleStatus.NegativelyReviewed && a.Status != ArticleStatus.MinorChangesWithoutNewReview).ToList();
             if (!String.IsNullOrEmpty(arvm.SearchPhrase))
             {
                 articles = dbContext.Articles.Where(a => a.Title.ToLower().Contains(arvm.SearchPhrase.ToLower()) || a.MainAuthor.Name.ToLower().Contains(arvm.SearchPhrase.ToLower()) || a.MainAuthor.Surname.ToLower().Contains(arvm.SearchPhrase.ToLower())).ToList();
-            }
-            else
-            {
-                articles = dbContext.Articles.ToList();
             }
             switch (arvm.SortBy)
             {
@@ -136,27 +133,7 @@ namespace ArticleReviewSystem.Controllers
 
         public ActionResult ReviewersAssign(int articleId)
         {
-            ReviewersAssignViewModel ravm = new ReviewersAssignViewModel();
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
-
-            ravm.Article = dbContext.Articles.Find(articleId);
-            ravm.AssignedReviewers = new List<SimpleUser>();
-
-            foreach (Review r in ravm.Article.Reviews)
-            {
-                ravm.AssignedReviewers.Add(new SimpleUser() { Affiliation = r.Reviewer.Affiliation, Id = r.Reviewer.Id, Name = r.Reviewer.Name, Surname = r.Reviewer.Surname });
-            }
-
-            var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
-            ravm.AvailableReviewers = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(ravm.Article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
-
-
-            ravm.AvailableReviewers = ravm.AvailableReviewers.OrderBy(r => r.Surname).ToList();
-            ravm.SortBy = UserSortBy.Name;
-            ravm.CurrentPage = 1;
-            ravm.NumberOfPages = (int)Math.Ceiling((double)ravm.AvailableReviewers.Count / (double)10);
-            ravm.ResultsForPage = 10;
+            ReviewersAssignViewModel ravm = getActualReviewrsAssignModel(articleId);
             return View(ravm);
         }
 
@@ -166,28 +143,34 @@ namespace ArticleReviewSystem.Controllers
             ModelState.Clear();
             ApplicationDbContext dbContext = new ApplicationDbContext();
             var article = dbContext.Articles.Find(ram.Article.ArticleId);
-            List<SimpleUser> assigned = new List<SimpleUser>();
+            List<SimpleReviewer> assigned = new List<SimpleReviewer>();
             List<ApplicationUser> available = new List<ApplicationUser>();
             ApplicationUser reviewer;
-            
+
             //add previous assigned reviewers
             if (ram.AssignedReviewers != null)
             {
-                foreach (SimpleUser a in ram.AssignedReviewers)
+                foreach (SimpleReviewer a in ram.AssignedReviewers)
                 {
                     reviewer = dbContext.Users.Find(a.Id);
-                    assigned.Add(new SimpleUser() { Affiliation = reviewer.Affiliation, Id = reviewer.Id, Name = reviewer.Name, Surname = reviewer.Surname });
+                    assigned.Add(new SimpleReviewer() {
+                        Affiliation = reviewer.Affiliation,
+                        Id = reviewer.Id,
+                        Name = reviewer.Name,
+                        Surname = reviewer.Surname,
+                        ReviewStatus = reviewer.AssignedReviews.First(r => r.Reviewer.Id == reviewer.Id).Status
+                    });
                 }
             }
 
             //add new reviewer
             reviewer = dbContext.Users.Find(reviewerId);
-            assigned.Add(new SimpleUser() { Affiliation = reviewer.Affiliation, Id = reviewer.Id, Name = reviewer.Name, Surname = reviewer.Surname });
+            assigned.Add(new SimpleReviewer() { Affiliation = reviewer.Affiliation, Id = reviewer.Id, Name = reviewer.Name, Surname = reviewer.Surname });
 
 
             var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
             available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
-            foreach (SimpleUser s in assigned)
+            foreach (SimpleReviewer s in assigned)
             {
                 var toRemove = available.FirstOrDefault(a => a.Id == s.Id);
                 available.Remove(toRemove);
@@ -221,29 +204,30 @@ namespace ArticleReviewSystem.Controllers
             ModelState.Clear();
             ApplicationDbContext dbContext = new ApplicationDbContext();
             var article = dbContext.Articles.Find(ram.Article.ArticleId);
-            List<SimpleUser> assigned = new List<SimpleUser>();
+            List<SimpleReviewer> assigned = new List<SimpleReviewer>();
             List<ApplicationUser> available = new List<ApplicationUser>();
             ApplicationUser tempUser;
 
             //prepare assigned list
-            foreach (SimpleUser a in ram.AssignedReviewers)
+            foreach (SimpleReviewer a in ram.AssignedReviewers)
             {
                 if (a.Id != reviewerId)
                 {
                     tempUser = dbContext.Users.Find(a.Id);
-                    assigned.Add(new SimpleUser()
+                    assigned.Add(new SimpleReviewer()
                     {
                         Affiliation = tempUser.Affiliation,
                         Id = tempUser.Id,
                         Name = tempUser.Name,
-                        Surname = tempUser.Surname
+                        Surname = tempUser.Surname,
+                        ReviewStatus = tempUser.AssignedReviews.First(r => r.Reviewer.Id == tempUser.Id).Status
                     });
                 }
             }
 
             var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
             available = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
-            foreach (SimpleUser s in assigned)
+            foreach (SimpleReviewer s in assigned)
             {
                 var toRemove = available.FirstOrDefault(a => a.Id == s.Id);
                 available.Remove(toRemove);
@@ -274,13 +258,92 @@ namespace ArticleReviewSystem.Controllers
         [HttpPost]
         public ActionResult ReviewersAssign(ReviewersAssignViewModel ram)
         {
-            //TODO:check number of reviewers and save to db
-            if (ram.AssignedReviewers.Count < 2)
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            var article = dbContext.Articles.Find(ram.Article.ArticleId);
+            List<ApplicationUser> assignedReviewers = new List<ApplicationUser>();
+            if(ram.AssignedReviewers!=null)
             {
-                ModelState.AddModelError("Reviewers", "There must be at least two reviewers assigned.");
-                return View(ram);
+                foreach (SimpleReviewer user in ram.AssignedReviewers)
+                {
+                    assignedReviewers.Add(dbContext.Users.Find(user.Id));
+                }
             }
+            switch (article.Status)
+            {
+                case ArticleStatus.WaitingToAssignReviewers:
+                    {
+                        if (assignedReviewers.Count != 2)
+                        {
+                            ram = getActualReviewrsAssignModel(article.ArticleId);
+                            ModelState.AddModelError("AssignedReviewers", "You must assign two reviewers for the article.");
+                            return View(ram);
+                        }
+                        foreach (ApplicationUser reviewer in assignedReviewers)
+                        {
+                            article.Reviews.Add(new Review()
+                            {
+                                Reviewer = reviewer,
+                                Status = ReviewStatus.NotReviewedYet,
+                                RelatedArticle = article
+                            });
+                        }
+                        article.Status = ArticleStatus.ReviewersAssigned;
+                        dbContext.SaveChangesAsync();
+                        break;
+                    }
+                case ArticleStatus.ReviewersAssigned:
+                    {
+                        if (assignedReviewers.Count != 2)
+                        {
+                            ram = getActualReviewrsAssignModel(article.ArticleId);
+                            ModelState.AddModelError("AssignedReviewers", "You must assign two reviewers for the article.");
+                            return View(ram);
+                        }
 
+                        //Delete previous reviewers
+                        List<Review> tempReviewsList = article.Reviews.ToList();
+                        foreach (Review review in tempReviewsList)
+                        {
+                            dbContext.Reviews.Remove(review);
+                        }
+                        //Add new reviewers
+                        foreach (ApplicationUser reviewer in assignedReviewers)
+                        {
+                            article.Reviews.Add(new Review()
+                            {
+                                Reviewer = reviewer,
+                                Status = ReviewStatus.NotReviewedYet,
+                                RelatedArticle = article
+                            });
+                        }
+                        break;
+                    }
+                case ArticleStatus.NewReviewerNeeded:
+                    {
+                        if (assignedReviewers.Count != 3)
+                        {
+                            ram = getActualReviewrsAssignModel(article.ArticleId);
+                            ModelState.AddModelError("AssignedReviewers", "You must only one additional reviewer");
+                            return View(ram);
+                        }
+
+                        foreach (ApplicationUser reviewer in assignedReviewers)
+                        {
+                            if (article.Reviews.Any(r => r.Reviewer.Id != reviewer.Id))
+                            {
+                                article.Reviews.Add(new Review()
+                                {
+                                    Reviewer = reviewer,
+                                    Status = ReviewStatus.NotReviewedYet,
+                                    RelatedArticle = article
+                                });
+                            }
+                        }
+                        article.Status = ArticleStatus.ChangesWithNewReview;
+                        dbContext.SaveChangesAsync();
+                        break;
+                    }
+            }
             return RedirectToAction("ReviewersAssign", new { articleId = ram.Article.ArticleId });
         }
 
@@ -351,6 +414,43 @@ namespace ArticleReviewSystem.Controllers
                 EnableSsl = true
             };
             client.Send(message);
+        }
+
+        private ReviewersAssignViewModel getActualReviewrsAssignModel(int articleId)
+        {
+            ReviewersAssignViewModel ravm = new ReviewersAssignViewModel();
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            ravm.Article = dbContext.Articles.Find(articleId);
+            ravm.AssignedReviewers = new List<SimpleReviewer>();
+
+            foreach (Review r in ravm.Article.Reviews)
+            {
+                ravm.AssignedReviewers.Add(new SimpleReviewer() {
+                    Affiliation = r.Reviewer.Affiliation,
+                    Id = r.Reviewer.Id,
+                    Name = r.Reviewer.Name,
+                    Surname = r.Reviewer.Surname,
+                    ReviewStatus = r.Status
+                });
+            }
+
+            var role = dbContext.Roles.SingleOrDefault(m => m.Name == "Admin");
+            ravm.AvailableReviewers = dbContext.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id) && !m.Affiliation.ToLower().Equals(ravm.Article.MainAuthor.Affiliation.ToLower()) && m.EmailConfirmed).ToList();
+
+            foreach (SimpleReviewer s in ravm.AssignedReviewers)
+            {
+                var toRemove = ravm.AvailableReviewers.FirstOrDefault(a => a.Id == s.Id);
+                ravm.AvailableReviewers.Remove(toRemove);
+            }
+
+            ravm.AvailableReviewers = ravm.AvailableReviewers.OrderBy(r => r.Surname).ToList();
+            ravm.SortBy = UserSortBy.Name;
+            ravm.CurrentPage = 1;
+            ravm.NumberOfPages = (int)Math.Ceiling((double)ravm.AvailableReviewers.Count / (double)10);
+            ravm.ResultsForPage = 10;
+            return ravm;
         }
     }
 }

@@ -225,7 +225,7 @@
     <Compile Include="ViewModels\RegisterConfirmationViewModel.cs" />
     <Compile Include="PartialModels\ReviewersAssignPartialModel.cs" />
     <Compile Include="ViewModels\ReviewersAssignViewModel.cs" />
-    <Compile Include="ViewModels\SimpleUser.cs" />
+    <Compile Include="ViewModels\SimpleReviewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AddArticleStyling.css" />

@@ -1,5 +1,5 @@
 ﻿@model ArticleReviewSystem.ViewModels.ReviewersAssignViewModel
-
+@using ArticleReviewSystem.Enums
 <!doctype html>
 <script src="~/Scripts/ReviewersAssignScript.js"></script>
 <html>
@@ -33,7 +33,12 @@
                                             <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Name)</td>
                                             <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Surname)</td>
                                             <td>@Html.DisplayFor(m => m.AssignedReviewers[i].Affiliation)</td>
-                                            <td><button class="btn btn-danger deleteReviewer" href="#" formmethod="post" formaction="@Url.Action("ReviewersAssignDelete","Admin",new { reviewerId= Model.AssignedReviewers[i].Id, articleId=Model.Article.ArticleId })">Remove</button></td>
+                                            <td>
+                                                @if(Model.AssignedReviewers[i].ReviewStatus==ReviewStatus.NotReviewedYet)
+                                                {
+                                                    <button class="btn btn-danger deleteReviewer" href="#" formmethod="post" formaction="@Url.Action("ReviewersAssignDelete", "Admin", new { reviewerId = Model.AssignedReviewers[i].Id, articleId = Model.Article.ArticleId })">Remove</button>
+                                                }
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -46,6 +51,7 @@
                         <a id="acceptButton" class="btn btn-success btn-lg btn-fill col-md-6" data-target="#acceptModal" data-toggle="modal">Accept</a>
                         <a class="btn btn-danger btn-lg btn-fill col-md-6" href="@Url.Action("ArticlesReviewers","Admin")">Cancel</a>
                     </div>
+                    @Html.ValidationMessageFor(model => model.AssignedReviewers, "", new { @class = "text-danger" })
                     <h2>Available reviewers</h2>
                     <div class="col-md-12 row">
                         <div class="col-md-4 col-md-push-4">@Html.TextBoxFor(m => m.SearchPhrase, new { @class = "form-control", placeholder = "Search", Type = "Text" })</div>
