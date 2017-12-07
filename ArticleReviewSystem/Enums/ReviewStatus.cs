@@ -9,8 +9,8 @@ namespace ArticleReviewSystem.Enums
     {
         NotReviewedYet,
         ReviewedPositively,
-        ReviewedNegatively,
+        ArticleNeedMinorChanges,
         ArticleNeedImprovement,
-        ArticleNeedMinorChanges
+        ReviewedNegatively
     }
 }

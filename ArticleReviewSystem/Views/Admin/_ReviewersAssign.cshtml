@@ -1,0 +1,35 @@
+﻿@model ArticleReviewSystem.PartialModels.ReviewersAssignPartialModel
+
+<div class="Results">
+    @if (Model.AvailableReviewers.Count != 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Affiliation</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reviewer in Model.AvailableReviewers)
+                {
+                    <tr id="clicable-row">
+                        <td>@reviewer.Name</td>
+                        <td>@reviewer.Surname</td>
+                        <td>@reviewer.Affiliation</td>
+                        <td><button class="btn btn-info btn-fill" type="submit" formmethod="post" formaction="@Url.Action("ReviewersAssignAdd","Admin",new { reviewerId= @reviewer.Id,articleId=@Model.ArticleId })">Assign</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3 class="text-center">No available reviewers found</h3>
+    }
+</div>
+
+
+
