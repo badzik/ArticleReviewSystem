@@ -1,5 +1,6 @@
 ﻿using ArticleReviewSystem.Enums;
 using ArticleReviewSystem.Enums.ReviewEnums;
+using ArticleReviewSystem.Helpers;
 using ArticleReviewSystem.Models;
 using ArticleReviewSystem.ViewModels;
 using iTextSharp.text;
@@ -76,25 +77,27 @@ namespace ArticleReviewSystem.Controllers
             emptyReview.Scope = model.Scope.ToString();
             emptyReview.Tables = model.Tables.ToString();
             emptyReview.Status = reviewStatus;
+            emptyReview.DetailComments = model.DetailComments;
             dbContext.SaveChanges();
             return RedirectToAction("ArticlesForReview", "Review");
         }
-
-        public ActionResult ShowPDF(int? articleID)
+        [Authorize]
+        public ActionResult ShowReview(int? articleID)
         {
            Review  review = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID).
                 Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name);
-            var builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
+            PdfBuilder builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
     return builder.GetPdf();
         }
-
-        public ActionResult PDF(int? articleID)
+        [Authorize]
+        public ActionResult ShowArticle(int? articleID)
         {
-            //TODO: only temporary view
-            Review review = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID).
-                 Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name);
-            var builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
-            return View();
+            var article = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID);
+            var auth = article.Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name) != null;
+            if (auth)
+                return File(article.Document, "application/pdf");
+            else
+                return RedirectToAction("Index", "Home");
         }
     }
 }
