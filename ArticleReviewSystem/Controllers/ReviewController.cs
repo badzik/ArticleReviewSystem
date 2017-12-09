@@ -38,7 +38,7 @@ namespace ArticleReviewSystem.Controllers
             Article article;
             try
             {
-                article= dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID);
+                article = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID);
                 var authorization = article.Reviews.Any(y => y.Reviewer.UserName == User.Identity.Name);
                 var emptyReview = dbContext.Reviews.SingleOrDefault(x => x.Reviewer.UserName == User.Identity.Name && x.RelatedArticle.ArticleId == article.ArticleId);
                 if (!authorization || emptyReview.FinalRecommendation != null)
@@ -50,7 +50,7 @@ namespace ArticleReviewSystem.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View(new ReviewViewModel { ArticleTitle = article.Title, ArticleID = article.ArticleId});
+            return View(new ReviewViewModel { ArticleTitle = article.Title, ArticleID = article.ArticleId });
         }
         [Authorize]
         [HttpPost]
@@ -62,7 +62,7 @@ namespace ArticleReviewSystem.Controllers
             }
             //TODO: add 'updating article status' I need waiting on Becia
             var article = dbContext.Articles.SingleOrDefault(m => m.ArticleId == model.ArticleID);
-            var reviewStatus = (ReviewStatus) Enum.Parse(typeof(ReviewStatus), model.FinalRecommendation.ToString()) ;
+            var reviewStatus = (ReviewStatus)Enum.Parse(typeof(ReviewStatus), model.FinalRecommendation.ToString());
             var emptyReview = dbContext.Reviews.SingleOrDefault(x => x.Reviewer.UserName == User.Identity.Name && x.RelatedArticle.ArticleId == article.ArticleId);
             emptyReview.AbbreviationsFormulaeUnits = model.AbbereviationsFormulaeUnits.ToString();
             emptyReview.Abstract = model.Abstract.ToString();
@@ -79,15 +79,21 @@ namespace ArticleReviewSystem.Controllers
             emptyReview.Status = reviewStatus;
             emptyReview.DetailComments = model.DetailComments;
             dbContext.SaveChanges();
+            
+
             return RedirectToAction("ArticlesForReview", "Review");
         }
         [Authorize]
         public ActionResult ShowReview(int? articleID)
         {
-           Review  review = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID).
-                Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name);
+            Review review = dbContext.Articles.SingleOrDefault(x => x.ArticleId == articleID).
+                 Reviews.SingleOrDefault(y => y.Reviewer.UserName == User.Identity.Name);
+            if (review == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             PdfBuilder builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
-    return builder.GetPdf();
+            return builder.GetPdf();
         }
         [Authorize]
         public ActionResult ShowArticle(int? articleID)
