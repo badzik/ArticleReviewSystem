@@ -10,7 +10,7 @@ namespace ArticleReviewSystem.ViewModels
     public class ArticlesReviewersViewModel
     {
         public List<Article> Articles { get; set; }
-        public ArticleSortBy SortBy { get; set; }
+        public ArticleSortBy SortBy { get; set; } 
         public string SearchPhrase { get; set; }
         public int CurrentPage { get; set; }
         public int NumberOfPages { get; set; }

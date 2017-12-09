@@ -7,13 +7,15 @@ using System.Web;
 
 namespace ArticleReviewSystem.ViewModels
 {
-    public class RegisterConfirmationViewModel
+    public class ReviewersAssignViewModel
     {
-        public List<ApplicationUser> UnconfirmedUsers { get; set; }
+        public Article Article { get; set; }
         public string SearchPhrase { get; set; }
         public UserSortBy SortBy { get; set; }
         public int CurrentPage { get; set; }
         public int NumberOfPages { get; set; }
         public int ResultsForPage { get; set; }
+        public List<SimpleReviewer> AssignedReviewers { get; set; }
+        public List<ApplicationUser> AvailableReviewers { get; set; }
     }
 }

@@ -219,6 +219,8 @@
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="PdfBuilder.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
+    <Compile Include="Enums\ArticleSortBy.cs" />
+    <Compile Include="Enums\UserSortBy.cs" />
     <Compile Include="Helpers\EmailSender.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -234,6 +236,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Article.cs" />
     <Compile Include="Enums\ArticleStatus.cs" />
@@ -244,9 +247,15 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="PartialModels\ArticlesReviewersPartialModel.cs" />
+    <Compile Include="ViewModels\ArticlesReviewersViewModel.cs" />
     <Compile Include="ViewModels\ArticlesReviewersViewModel.cs" />
     <Compile Include="ViewModels\CoAuthorViewModel.cs" />
+    <Compile Include="PartialModels\RegisterConfirmationPartialModel.cs" />
     <Compile Include="ViewModels\RegisterConfirmationViewModel.cs" />
+    <Compile Include="PartialModels\ReviewersAssignPartialModel.cs" />
+    <Compile Include="ViewModels\ReviewersAssignViewModel.cs" />
+    <Compile Include="ViewModels\SimpleReviewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AddArticleStyling.css" />
@@ -277,6 +286,7 @@
     <Content Include="Images\theme2.jpg" />
     <Content Include="Scripts\AddArticleFileBrowseScript.js" />
     <Content Include="Scripts\AddArticleScript.js" />
+    <Content Include="Scripts\ArticlesReviewersScript.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\custom.js" />
@@ -293,8 +303,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\RegisterConfirmationScript.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\ReviewersAssignScript.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -336,6 +348,11 @@
     <Content Include="Views\Review\ArticlesForReview.cshtml" />
     <Content Include="Views\Review\AddReview.cshtml" />
     <Content Include="Views\Review\Pdf.cshtml" />
+    <Content Include="Views\Admin\ReviewersAssign.cshtml" />
+    <Content Include="Views\Admin\ArticlesReviewers.cshtml" />
+    <Content Include="Views\Admin\_ArticlesReviewers.cshtml" />
+    <Content Include="Views\Admin\_ReviewersAssign.cshtml" />
+    <Content Include="Views\Admin\_RegisterConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
