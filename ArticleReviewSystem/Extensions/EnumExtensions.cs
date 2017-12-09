@@ -29,7 +29,6 @@ namespace ArticleReviewSystem.Extensions
                 {
                     return enumValue.ToString();
                 }
-                
             }
 
         }

@@ -1,516 +1,476 @@
 ﻿@model ArticleReviewSystem.Models.Review
+@using ArticleReviewSystem.Enums.ReviewEnums
+@using ArticleReviewSystem.Extensions
+<style>
+    body {
+        padding: 20px;
+        margin: 0 auto;
+        zoom: 180%;
+    }
+
+
+    table a:link {
+        color: #666;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    table a:active,
+    table {
+        font-family: Arial, Helvetica, sans-serif;
+        color: #666;
+        font-size: 12px;
+        text-shadow: 2px 2px 0px #fff;
+        background: #eaebec;
+        margin-left:40px;
+        margin: 10px;
+        border: #ccc 2px solid;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        -moz-box-shadow: 0 2px 2px #d1d1d1;
+        -webkit-box-shadow: 0 2px 2px #d1d1d1;
+        box-shadow: 0 2px 2px #d1d1d1;
+    }
+
+        table th {
+            padding: 22px 25px 22px 25px;
+            border-top: 2px solid #fafafa;
+            border-bottom: 2px solid #e0e0e0;
+            background: #ededed;
+            background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+            background: -moz-linear-gradient(top, #ededed, #ebebeb);
+        }
+
+            table th:first-child {
+                text-align: left;
+                padding-left: 20px;
+            }
+
+        table tr:first-child th:first-child {
+            -moz-border-radius-topleft: 3px;
+            -webkit-border-top-left-radius: 3px;
+            border-top-left-radius: 3px;
+        }
+
+        table tr:first-child th:last-child {
+            -moz-border-radius-topright: 3px;
+            -webkit-border-top-right-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+
+        table tr {
+            text-align: center;
+            padding-left: 20px;
+        }
+
+        table td:first-child {
+            text-align: left;
+            padding-left: 20px;
+            border-left: 0;
+        }
+
+        table td {
+            padding: 18px;
+            border-top: 2px solid #ffffff;
+            border-bottom: 2px solid #e0e0e0;
+            border-left: 2px solid #e0e0e0;
+            background: #fafafa;
+            background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+            background: -moz-linear-gradient(top, #fbfbfb, #fafafa);
+        }
+
+        table tr.even td {
+            background: #f6f6f6;
+            background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+            background: -moz-linear-gradient(top, #f8f8f8, #f6f6f6);
+        }
+
+        table tr:last-child td {
+            border-bottom: 0;
+        }
+
+            table tr:last-child td:first-child {
+                -moz-border-radius-bottomleft: 3px;
+                -webkit-border-bottom-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
+
+            table tr:last-child td:last-child {
+                -moz-border-radius-bottomright: 3px;
+                -webkit-border-bottom-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+    .tableDivLeft {
+        float: left;
+        margin-right: 30px;
+    }
+
+    .tableDivRight {
+        float: left;
+        margin-right: 30px;
+    }
+
+    .mainTable {
+        margin: auto;
+        border: 3px solid #73AD21;
+    }
+
+    #customers {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #customers td, #customers th {
+            border: 2px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+</style>
 <html>
 <body>
-    <div id="page_1">
-        <p class="p0 ft0">REFERENCE REPORT FORM</p>
-        <p class="p1 ft0">[THIS PART WILL NOT BE SENT TO AUTHOR(S)]</p>
-        <p class="p2 ft0">I. ABOUT REVIEWER</p>
-        <p class="p3 ft0">Name and surname:</p>
-        <p class="p4 ft0">Place of work:</p>
-        <p class="p5 ft0">Degree:</p>
-        <p class="p6 ft0"><nobr>e-mail:</nobr></p>
-        <p class="p7 ft0">Additional information</p>
-    </div>
-    <div id="page_2">
+    <h1>REFERENCE REPORT FORM</h1>
+    <h2>1. ABOUT REVIEWER</h2>
+    <table cellspacing='0' id="customers">
+        <tbody>
+            <tr>
+                <td>Name and surname:</td>
+                <td>@Model.Reviewer.Name @Model.Reviewer.Surname</td>
+            </tr>
+            <tr class="even">
+                <td>Place of work:</td>
+                <td>@Model.Reviewer.Affiliation</td>
+            </tr>
+            <tr>
+                <td>Degree:</td>
+                <td>@Model.Reviewer.Degree</td>
+            </tr>
+            <tr>
+                <td>E-mail:</td>
+                <td>@Model.Reviewer.Email</td>
+            </tr>
+            <tr>
+                <td>Additional information:</td>
+                <td>@Model.Reviewer.AdditionalInfo</td>
+            </tr>
+        </tbody>
+    </table>
 
+    <h2>2. OVERVIEW</h2>
+    <div class="tableDivLeft" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Scope</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Scope)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Scope?;
+                if (Model.Scope == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
 
-        <p class="p8 ft0">REFERENCE REPORT FORM</p>
-        <p class="p9 ft0">[THIS PART WILL BE SENT TO AUTHOR(S)]</p>
-        <p class="p10 ft0">II. OVERVIEW</p>
-        <table cellpadding="0" cellspacing="0" class="t0">
-            <tbody>
-                <tr>
-                    <td colspan="3" class="tr0 td0"><p class="p11 ft0">SCOPE</p></td>
-                    <td colspan="3" class="tr0 td1"><p class="p12 ft0">ILLUSTRATIONS</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td3"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td6"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Of general relevance</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Adequate</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td14"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td15"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Relevant to the field of DSP</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Inadequate technical quality</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">Very specialised</p></td>
-                    <td class="tr3 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr3 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr3 td13"><p class="p12 ft0">Non very informative</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Out of scope</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Some may be omitted (see Sec. III):</p></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="tr2 td16"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td15"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tr0 td17"><p class="p11 ft0">CONTENT</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">More should be added (see Sec. III)</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td3"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td colspan="2" class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">New technique or theory</p></td>
-                    <td colspan="3" class="tr0 td18"><p class="p12 ft0">TABLES</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td14"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td6"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">New application of known concepts</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Adequate</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">Confirmation of known techniques</p></td>
-                    <td class="tr3 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr3 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr3 td13"><p class="p12 ft0">Should be rearranged to improve clarity</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Repetition of known material</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Some may be omitted:</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td14"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td15"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Too speculative or theoretical</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">More should be added (see Sec. III)</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td colspan="2" class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Too technical</p></td>
-                    <td colspan="3" class="tr0 td18"><p class="p12 ft0">ABBREVIATIONS, FORMULAE, UNITS</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td14"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td6"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Too preliminary</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Conform to accepted norm</p></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="tr1 td16"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tr3 td17"><p class="p11 ft0">CONCLUSION DRAWN</p></td>
-                    <td class="tr3 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr3 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr3 td13"><p class="p12 ft0">Should be changed</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td3"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Adequate</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Should be explained</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td colspan="2" class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">Not justified</p></td>
-                    <td colspan="3" class="tr3 td18"><p class="p12 ft0">LITERATURE REFERENCES</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td6"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Suffer from substantial omissions</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Adequate</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td14"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td15"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Suffer from loose generalisations</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Inadequate</p></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="tr1 td16"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tr3 td17"><p class="p11 ft0">PRESENTATION</p></td>
-                    <td class="tr3 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr3 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr3 td13"><p class="p12 ft0">Some may be omitted:</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td3"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Adequate</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">More should be added (see Sec. III)</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td colspan="2" class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">Too brief for clarity</p></td>
-                    <td colspan="3" class="tr3 td18"><p class="p12 ft0">OVERALL EVALUATION</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td6"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Too comprehensive, should be</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Excellent</p></td>
-                </tr>
-                <tr>
-                    <td class="tr4 td8"><p class="p13 ft4">&nbsp;</p></td>
-                    <td class="tr4 td9"><p class="p13 ft4">&nbsp;</p></td>
-                    <td class="tr4 td10"><p class="p15 ft5">shortened</p></td>
-                    <td class="tr4 td11"><p class="p13 ft4">&nbsp;</p></td>
-                    <td class="tr4 td12"><p class="p13 ft4">&nbsp;</p></td>
-                    <td class="tr4 td13"><p class="p13 ft4">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">General organisation unsuitable</p></td>
-                    <td class="tr3 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr3 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr3 td13"><p class="p12 ft0">Good</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Badly written, hardly readable</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Acceptable</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">Contains irrelevant material</p></td>
-                    <td class="tr3 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr3 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr3 td13"><p class="p12 ft0">Poor</p></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="tr1 td16"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tr0 td17"><p class="p11 ft0">LANGUAGE</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Sound, but dull</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td3"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td15"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p17 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Satisfactory</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Without obvious significance</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td colspan="2" class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr3 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr3 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr3 td10"><p class="p15 ft0">Needs corrections</p></td>
-                    <td colspan="3" class="tr3 td18"><p class="p12 ft0">FINAL RECOMMENDATION</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td6"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Needs substantial revision or rewriting</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Accept with no changes</p></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="tr1 td16"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tr5 td17"><p class="p11 ft0">ABSTRACT</p></td>
-                    <td class="tr5 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr5 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr5 td13"><p class="p12 ft0">Accept after minor revisions (without 2<span class="ft6">nd </span>review)</p></td>
-                </tr>
-                <tr>
-                    <td class="tr6 td2"><p class="p13 ft7">&nbsp;</p></td>
-                    <td class="tr6 td3"><p class="p13 ft7">&nbsp;</p></td>
-                    <td class="tr6 td4"><p class="p13 ft7">&nbsp;</p></td>
-                    <td class="tr6 td5"><p class="p13 ft7">&nbsp;</p></td>
-                    <td class="tr6 td15"><p class="p13 ft7">&nbsp;</p></td>
-                    <td class="tr6 td7"><p class="p13 ft7">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Clear and adequate</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Revise and resubmit</p></td>
-                </tr>
-                <tr>
-                    <td class="tr2 td2"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td14"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td4"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td5"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td15"><p class="p13 ft3">&nbsp;</p></td>
-                    <td class="tr2 td7"><p class="p13 ft3">&nbsp;</p></td>
-                </tr>
-                <tr>
-                    <td class="tr0 td8"><p class="p12 ft2">[</p></td>
-                    <td class="tr0 td9"><p class="p14 ft0">]</p></td>
-                    <td class="tr0 td10"><p class="p15 ft0">Should be rewritten (or missing)</p></td>
-                    <td class="tr0 td11"><p class="p12 ft0">[</p></td>
-                    <td class="tr0 td12"><p class="p16 ft0">]</p></td>
-                    <td class="tr0 td13"><p class="p12 ft0">Reject</p></td>
-                </tr>
-                <tr>
-                    <td class="tr1 td2"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td14"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td4"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td5"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td15"><p class="p13 ft1">&nbsp;</p></td>
-                    <td class="tr1 td7"><p class="p13 ft1">&nbsp;</p></td>
-                </tr>
-            </tbody>
+            }
         </table>
     </div>
-    <div id="page_3">
-        <p class="p18 ft0">III. DETAIL COMMENTS [THIS PART WILL BE SENT TO AUTHOR(S)]</p>
-        <p class="p19 ft0">Title of article:</p>
+
+    <div class="tableDivRight" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Illustrations</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Illustrations)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Illustrations?;
+                if (Model.Illustrations == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
     </div>
+
+    <div class="tableDivLeft" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Content</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Content)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Content?;
+                if (Model.Content == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+   
+    <div class="tableDivRight" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Tables</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Tables)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Tables?;
+                if (Model.Tables == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+
+    <div class="tableDivLeft" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Conclusion drawn</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(ConclusionDrawn)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as ConclusionDrawn?;
+                if (Model.ConclusionDraw == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+
+    <div class="tableDivRight" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Abbereviations formulae units</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(AbbereviationsFormulaeUnits)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as AbbereviationsFormulaeUnits?;
+                if (Model.AbbreviationsFormulaeUnits == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+
+    <div class="tableDivLeft" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Literature References</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(LiteratureReferences)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as LiteratureReferences?;
+                if (Model.LiteratureReferences == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+
+    <div class="tableDivRight" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Presentation</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Presentation)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Presentation?;
+                if (Model.Presentation == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+
+            }
+        </table>
+    </div>
+
+    <div class="tableDivLeft" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Overall evaluation</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(OverallEvaluation)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as OverallEvaluation?;
+                if (Model.OverallEvaluation == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="tableDivRight" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Language</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Language)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Language?;
+                if (Model.Language == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="tableDivLeft" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>FinalRecommendation</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(FinalRecommendation)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as FinalRecommendation?;
+                if (Model.FinalRecommendation == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="tableDivRight" id="tableDiv">
+        <table cellspacing='0'>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Abstract</th>
+                </tr>
+            </thead>
+            @foreach (var value in Enum.GetValues(typeof(Abstract)))
+            {
+                string radioChecked = String.Empty;
+                var enumValue = value as Abstract?;
+                if (Model.Content == enumValue.ToString())
+                {
+                    radioChecked = "X";
+                }
+                <tr>
+                    <td>@radioChecked</td>
+                    <td>@enumValue.GetDisplayName()</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <h4>Details comments</h4>
+    @Model.
 </body>
 </html>

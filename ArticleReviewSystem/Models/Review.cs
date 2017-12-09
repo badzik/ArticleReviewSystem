@@ -24,6 +24,7 @@ namespace ArticleReviewSystem.Models
         public string Abstract { get; set; }
         public string OverallEvaluation { get; set; }
         public string FinalRecommendation { get; set; }
+        public string DetailComments { get; set; }
 
         public virtual ApplicationUser Reviewer { get; set; }
         public virtual Article RelatedArticle { get; set; }

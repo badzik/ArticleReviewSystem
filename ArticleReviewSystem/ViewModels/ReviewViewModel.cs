@@ -12,7 +12,7 @@ namespace ArticleReviewSystem.ViewModels
     {
         public string ArticleTitle { get; set; }
         public int ArticleID { get; set; }
-        [Required(ErrorMessage ="This field is required")]
+        [Required(ErrorMessage = "This field is required")]
         [EnumDataType(typeof(Scope))]
         public Scope? Scope { get; set; } = null;
         [Required(ErrorMessage = "This field is required")]
@@ -44,11 +44,11 @@ namespace ArticleReviewSystem.ViewModels
         public Language? Language { get; set; } = null;
         [Required(ErrorMessage = "This field is required")]
         [EnumDataType(typeof(Abstract))]
-        public Abstract? Abstract{ get; set; } = null;
+        public Abstract? Abstract { get; set; } = null;
         [Required(ErrorMessage = "This field is required")]
         [EnumDataType(typeof(FinalRecommendation))]
         public FinalRecommendation? FinalRecommendation { get; set; } = null;
         [Required(ErrorMessage = "This field is required")]
         public string DetailComments { get; set; }
-    }
+}
 }
