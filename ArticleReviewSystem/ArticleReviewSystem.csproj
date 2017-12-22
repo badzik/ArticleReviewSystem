@@ -225,7 +225,6 @@
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Helpers\PdfBuilder.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
-    <Compile Include="Enums\ArticleSortBy.cs" />
     <Compile Include="Enums\UserSortBy.cs" />
     <Compile Include="Helpers\EmailSender.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -254,7 +253,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="PartialModels\ArticlesReviewersPartialModel.cs" />
-    <Compile Include="ViewModels\ArticlesReviewersViewModel.cs" />
     <Compile Include="ViewModels\ArticlesReviewersViewModel.cs" />
     <Compile Include="ViewModels\CoAuthorViewModel.cs" />
     <Compile Include="PartialModels\RegisterConfirmationPartialModel.cs" />
