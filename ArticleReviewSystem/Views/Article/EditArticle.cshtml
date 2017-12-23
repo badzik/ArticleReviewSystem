@@ -59,8 +59,11 @@
                     <div class="coAutohorsBox">
                         <div class="col-md-12 form-group">
                             @Html.LabelFor(model => model.CoAuthors, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <a href="#" id="coAuthPlus"><span class="more-less glyphicon glyphicon-plus-sign" style="vertical-align:middle;"></span></a>
-                            <a href="#" id="coAuthMinus"><span class="more-less glyphicon glyphicon-minus-sign" style="vertical-align:middle;"></span></a>
+                            @if(!Model.onlyReupload)
+                            {
+                                <a href="#" id="coAuthPlus"><span class="more-less glyphicon glyphicon-plus-sign" style="vertical-align:middle;"></span></a>
+                                <a href="#" id="coAuthMinus"><span class="more-less glyphicon glyphicon-minus-sign" style="vertical-align:middle;"></span></a>
+                            }
                         </div>
                         @Html.ValidationMessageFor(model => model.CoAuthors, "", new { @class = "text-danger" })
 

@@ -187,6 +187,7 @@ namespace ArticleReviewSystem.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    var result1 = UserManager.AddToRole(user.Id, "User");
                     return View("DisplayMessage");
                 }
                 AddErrors(result);

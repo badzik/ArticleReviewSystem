@@ -2,49 +2,56 @@
 @using System.Text.RegularExpressions
 
 <div class="Results">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Status
-                </th>
-                <th>
-                    Article name
-                </th>
-                <th>
-                    @Html.DisplayName("Options")
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @Html.HiddenFor(m => m.MaxPages)
-            @foreach (var item in Model.Articles)
-            {
+    @if (Model.Articles.Count() > 0)
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @{ string enum_ = item.Status.ToString();
-                            string status = Regex.Replace(enum_, "([a-z])_?([A-Z])", "$1 $2").ToLower();
-                        }
-                        @Html.DisplayName(status)
-                    </td>
-                    <td>
-                        @{
-                            ViewData["article_id"] = item.ArticleId;
-                        }
-                        @Html.ActionLink(item.ArticleName, "DisplayPDF", "Article", new { articleId = ViewData["article_id"] }, null)
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-block btn-info btn-fill" value="Details" onclick="location.href='@Url.Action("DisplayArticleDetails", "Article", new { articleId = item.ArticleId })'" />
-                    </td>
-
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Article name
+                    </th>
+                    <th>
+                        @Html.DisplayName("Options")
+                    </th>
                 </tr>
+            </thead>
+            <tbody>
+                @Html.HiddenFor(m=>m.MaxPages)
+                @foreach (var item in Model.Articles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @{ string enum_ = item.Status.ToString();
+                                string status = Regex.Replace(enum_, "([a-z])_?([A-Z])", "$1 $2").ToLower();
                             }
-        </tbody>
-    </table>
+                            @Html.DisplayName(status)
+                        </td>
+                        <td>
+                            @{
+                                ViewData["article_id"] = item.ArticleId;
+                            }
+                            @Html.ActionLink(item.ArticleName, "DisplayPDF", "Article", new { articleId = ViewData["article_id"] }, null)
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-block btn-info btn-fill" value="Details" onclick="location.href='@Url.Action("DisplayArticleDetails", "Article", new { articleId = item.ArticleId })'" />
+                        </td>
+
+                    </tr>
+                                }
+            </tbody>
+        </table>
+                                }
+                                else
+                                {
+                                    <h3 class="text-center">No articles has been found</h3>
+                                }
 </div>

@@ -53,15 +53,27 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li>
-                                <a href="javascript:void(0);" data-toggle="search" class="hidden-xs"><i class="fa fa-search"></i></a>
-                            </li>
-                            <li>
-                                <a href="/Article/AddArticle">Add Article</a>
-                            </li>
-                            <li>
-                                <a href="/Article/DisplayArticles">Display articles</a>
-                            </li>
+                            @if (this.User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a href="/Admin/RegisterConfirmation">Confirm registrations</a>
+                                </li>
+                                <li>
+                                    <a href="/Admin/ArticlesReviewers">Assign reviewers</a>
+                                </li>
+                            }
+                            @if (this.User.IsInRole("User"))
+                            {
+                                <li>
+                                    <a href="/Article/AddArticle">Add new article</a>
+                                </li>
+                                <li>
+                                    <a href="/Article/DisplayArticles">My articles</a>
+                                </li>
+                                <li>
+                                    <a href="/Review/ArticlesForReview">Articles for review</a>
+                                </li>
+                            }
                         </ul>
                         <form class="navbar-form navbar-left navbar-search-form" role="search">
                             <div class="form-group">

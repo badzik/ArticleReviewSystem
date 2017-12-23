@@ -5,7 +5,7 @@
 <html>
 <body>
     <div class="main">
-        <div class="container tim-container">
+        <div class="container tim-container" style="padding-top:100px">
             <div class="panel-group">
                 <h1 class="text-center">@Model.Article.Title</h1>
                 @using (Html.BeginForm("ReviewersAssign", "Admin", FormMethod.Post, new { id = "myForm" }))

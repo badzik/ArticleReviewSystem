@@ -10,7 +10,7 @@
 <body>
 
     <div class="main">
-        <div class="container tim-container" id="test" style="max-width:800px; padding-top:100px">
+        <div class="container tim-container" style="padding-top:100px">
             <h1 class="text-center">My articles</h1>
             <div class="col-md-12 row">
                 <div class="col-md-4 col-md-push-4">@Html.TextBoxFor(m => m.SearchPhrase, new { @class = "form-control", placeholder = "Search", Type = "Text" })</div>
@@ -32,50 +32,57 @@
             </div>
             <div class="form-horizontal">
                 <div class="Results">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Title
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Article name
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Options")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Articles)
-                            {
+                    @if (Model.Articles.Count() > 0)
+                    {
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </td>
-                                    <td>
-                                        @{ string enum_ = item.Status.ToString();
-                                            string status = Regex.Replace(enum_, "([a-z])_?([A-Z])", "$1 $2").ToLower();
-                                        }
-                                        @Html.DisplayName(status)
-                                    </td>
-                                    <td>
-                                        @{
-                                            ViewData["article_id"] = item.ArticleId;
-                                        }
-                                        @Html.ActionLink(item.ArticleName, "DisplayPDF", "Article", new { articleId = ViewData["article_id"] }, null)
-                                    </td>
-                                    <td>
-                                        <input type="button" class="btn btn-block btn-info btn-fill" value="Details" onclick="location.href='@Url.Action("DisplayArticleDetails", "Article", new { articleId = item.ArticleId })'" />
-                                    </td>
-
+                                    <th>
+                                        Title
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Article name
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Options")
+                                    </th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Articles)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @{ string enum_ = item.Status.ToString();
+                                                string status = Regex.Replace(enum_, "([a-z])_?([A-Z])", "$1 $2").ToLower();
                                             }
-                        </tbody>
-                    </table>
+                                            @Html.DisplayName(status)
+                                        </td>
+                                        <td>
+                                            @{
+                                                ViewData["article_id"] = item.ArticleId;
+                                            }
+                                            @Html.ActionLink(item.ArticleName, "DisplayPDF", "Article", new { articleId = ViewData["article_id"] }, null)
+                                        </td>
+                                        <td>
+                                            <input type="button" class="btn btn-block btn-info btn-fill" value="Details" onclick="location.href='@Url.Action("DisplayArticleDetails", "Article", new { articleId = item.ArticleId })'" />
+                                        </td>
+
+                                    </tr>
+                                                }
+                            </tbody>
+                        </table>
+                                                }
+                                                else
+                                                {
+                                                    <h3 class="text-center">No articles has been found</h3>
+                                                }
                 </div>
                 <div>
                     <div class="col-md-4 col-md-push-4 text-center row" id="pageControl">
