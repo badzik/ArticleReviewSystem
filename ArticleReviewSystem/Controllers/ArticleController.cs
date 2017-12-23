@@ -94,5 +94,132 @@ namespace ArticleReviewSystem.Controllers
             return View(avm);
 
         }
+
+
+        public ActionResult DisplayArticles()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var userId = User.Identity.GetUserId();
+
+            return View(db.Articles.Where(m => m.MainAuthor.Id.Equals(userId)).ToList());
+        }
+
+        [HttpGet]
+        public ActionResult DisplayPDF(int articleId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var userId = User.Identity.GetUserId();
+
+            byte[] byteArray = db.Articles.Where(m => m.MainAuthor.Id.Equals(userId) && m.ArticleId.Equals(articleId))
+                .Select(m => m.Document).FirstOrDefault();
+            MemoryStream pdfStream = new MemoryStream();
+            pdfStream.Write(byteArray, 0, byteArray.Length);
+            pdfStream.Position = 0;
+            return new FileStreamResult(pdfStream, "application/pdf");
+        }
+
+        [HttpGet]
+        public ActionResult DisplayArticleDetails(int articleId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var userId = User.Identity.GetUserId();
+            ViewData["article_id"] = articleId;
+
+            DisplayArticleViewModel model = new DisplayArticleViewModel();
+
+            var article = db.Articles.Find(articleId);
+
+            model.ArticleName = article.ArticleName;
+            model.Document = article.Document;
+            model.Date = article.Date;
+            model.Status = article.Status;
+            model.Title = article.Title;
+            model.CoAuthors = article.CoAuthors;
+
+            return View(model);
+        }
+
+        public ActionResult DeleteArticle(int articleId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            ViewData["article_id"] = articleId;
+
+            var test = db.CoAuthors.Where(m => m.CoAuthoredArticle.ArticleId == articleId);
+            foreach (var item in test)
+                db.CoAuthors.Remove(item);
+
+            Article article = db.Articles.Find(articleId);
+            db.Articles.Remove(article);
+            //CoAuthor coAuthor = db.CoAuthors.Find(articleId);
+            //db.CoAuthors.Remove(coAuthor);
+
+
+
+            db.SaveChanges();
+            return RedirectToAction("DisplayArticles");
+        }
+
+        [HttpGet]
+        public ActionResult EditArticle(int articleId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            Article article = db.Articles.Find(articleId);
+            EditArticleViewModel evm = new EditArticleViewModel();
+            evm.ArticleId = article.ArticleId;
+            evm.ArticleName = article.ArticleName;
+            evm.Title = article.Title;
+
+            return View(evm);
+        }
+
+        [HttpPost]
+        public ActionResult EditArticle(EditArticleViewModel evm)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                List<string> errors = new List<string>();
+                foreach (var modelStateVal in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        errors.Add(errorMessage);
+                    }
+                }
+                foreach (string error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+
+                return View(evm);
+            }
+
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            Article article = db.Articles.Find(evm.ArticleId);
+            Byte[] pdfFile = null;
+
+            if (evm.File != null)
+            {
+                Stream str = evm.File.InputStream;
+                BinaryReader Br = new BinaryReader(str);
+                pdfFile = Br.ReadBytes((Int32)str.Length);
+                article.Document = pdfFile;
+                article.ArticleName = evm.File.FileName;
+            }
+            article.Title = evm.Title;
+            article.Date = DateTime.Now;
+
+            db.SaveChanges();
+
+            return RedirectToAction("DisplayArticles");
+        }
+
+
+
     }
 }

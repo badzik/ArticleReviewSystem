@@ -1,0 +1,82 @@
+﻿@model IEnumerable<ArticleReviewSystem.Models.Article>
+@using System.Text.RegularExpressions
+
+<!doctype html>
+
+<link href="~/Content/AddArticleStyling.css" rel="stylesheet" />
+
+<html>
+
+<body>
+
+    <div class="main">
+        <div class="container tim-container" id="test" style="max-width:800px; padding-top:100px">
+            <h1 class="text-center">My articles</h1>
+            <div class="space-30"></div>
+            <div class="form-horizontal">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Row")
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ArticleName)
+                            </th>
+                            <th>
+                                @Html.DisplayName("Options")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int rowNo = 0; }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @(rowNo += 1)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @{ string enum_ = item.Status.ToString();
+                                        string status = Regex.Replace(enum_, "([a-z])_?([A-Z])", "$1 $2").ToLower();
+                                    }
+                                    @Html.DisplayName(status)
+                                </td>
+                                <td>
+                                    @{
+                                        ViewData["article_id"] = item.ArticleId;
+                                    }
+                                    @Html.ActionLink(item.ArticleName, "DisplayPDF", "Article", new { articleId = ViewData["article_id"] }, null)
+                                </td>
+                                <td>
+                                    <input type="button" class="btn btn-block btn-info btn-fill" value="Details" onclick="location.href='@Url.Action("DisplayArticleDetails", "Article", new { articleId = item.ArticleId })'" />
+                                </td>
+
+                            </tr>
+                                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="space"></div>
+            <div class="space"></div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("html, body").animate({ scrollTop: $('#test').offset().top }, 1000);
+    </script>
+
+</body>
+
+</html>

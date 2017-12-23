@@ -1,0 +1,104 @@
+﻿@model ArticleReviewSystem.ViewModels.DisplayArticleViewModel
+@using System.Text.RegularExpressions
+
+<!doctype html>
+
+<link href="~/Content/AddArticleStyling.css" rel="stylesheet" />
+
+<html>
+
+<body>
+    <div class="main">
+        <div class="container tim-container" id="test" style="max-width:800px; padding-top:100px">
+            <div>
+                <h1 class="text-center">@Html.DisplayFor(model => model.Title)</h1>
+                <h3 id="test">Details</h3>
+                <dl class="dl-horizontal">
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    @{ string enum_ = Model.Status.ToString();
+                        string status = Regex.Replace(enum_, "([a-z])_?([A-Z])", "$1 $2").ToLower();
+                    }
+                    <dd>
+                        @Html.DisplayName(status)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ArticleName)
+                    </dt>
+                    <dd>
+                        @Html.ActionLink(Model.ArticleName, "DisplayPDF", "Article", new { articleId = ViewData["article_id"] }, null)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Date)
+                    </dd>
+
+                </dl>
+            </div>
+
+            <h3>Co-authors</h3>
+            <div class="form-horizontal">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Name")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Surname")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Affiliation")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CoAuthors)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Surname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Affiliation)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="space-30"></div>
+
+            <div class="form-horizontal">
+
+                @{ if (Model.Status == ArticleReviewSystem.Enums.ArticleStatus.WaitingToAssignReviewers)
+                    {
+                        <input type="button" class="btn btn-block btn-success btn-fill" value="Edit" onclick="location.href='@Url.Action("EditArticle", "Article", new { articleId = ViewData["article_id"] })'" />
+                            <input type="button" class="btn btn-block btn-danger btn-fill" value="Delete" onclick="location.href='@Url.Action("DeleteArticle", "Article", new { articleId = ViewData["article_id"] })'" />
+                    }
+                }
+                <input type="button" class="btn btn-block btn-info btn-fill" value="Back" onclick="location.href='@Url.Action("DisplayArticles", "Article")'" />
+            </div>
+
+            <div class="space"></div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("html, body").animate({ scrollTop: $('#test').offset().top }, 1000);
+    </script>
+
+</body>
+
+</html>

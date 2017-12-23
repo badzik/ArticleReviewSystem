@@ -224,6 +224,8 @@
     <Compile Include="Enums\ReviewEnums\Tables.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Helpers\PdfBuilder.cs" />
+    <Compile Include="ViewModels\DisplayArticleViewModel.cs" />
+    <Compile Include="ViewModels\EditArticleViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
     <Compile Include="Enums\UserSortBy.cs" />
     <Compile Include="Helpers\EmailSender.cs" />
@@ -372,6 +374,9 @@
     <Content Include="Views\Admin\_ArticlesReviewers.cshtml" />
     <Content Include="Views\Admin\_ReviewersAssign.cshtml" />
     <Content Include="Views\Admin\_RegisterConfirmation.cshtml" />
+    <Content Include="Views\Article\DisplayArticleDetails.cshtml" />
+    <Content Include="Views\Article\DisplayArticles.cshtml" />
+    <Content Include="Views\Article\EditArticle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
