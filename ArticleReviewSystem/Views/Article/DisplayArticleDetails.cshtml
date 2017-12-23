@@ -36,7 +36,7 @@
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.Date)
+                        @Model.Date.ToString("dd/MM/yyyy")
                     </dd>
 
                 </dl>
@@ -44,47 +44,57 @@
 
             <h3>Co-authors</h3>
             <div class="form-horizontal">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayName("Name")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Surname")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Affiliation")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.CoAuthors)
-                        {
+                @if (Model.CoAuthors.Count > 0)
+                {
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Surname)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Affiliation)
-                                </td>
+                                <th>
+                                    @Html.DisplayName("Name")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Surname")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Affiliation")
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CoAuthors)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Surname)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Affiliation)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <h3 class="text-center">None co-authors for this article.</h3>
+                }
             </div>
 
             <div class="space-30"></div>
 
             <div class="form-horizontal">
-
+                @if (Model.Status == ArticleReviewSystem.Enums.ArticleStatus.ChangesWithNewReview || Model.Status == ArticleReviewSystem.Enums.ArticleStatus.MinorChangesWithoutNewReview)
+                {
+                    <input type="button" class="btn btn-block btn-success btn-fill" value="Reupload article" onclick="location.href='@Url.Action("EditArticle", "Article", new { articleId = ViewData["article_id"] })'" />
+                }
                 @{ if (Model.Status == ArticleReviewSystem.Enums.ArticleStatus.WaitingToAssignReviewers)
                     {
                         <input type="button" class="btn btn-block btn-success btn-fill" value="Edit" onclick="location.href='@Url.Action("EditArticle", "Article", new { articleId = ViewData["article_id"] })'" />
-                            <input type="button" class="btn btn-block btn-danger btn-fill" value="Delete" onclick="location.href='@Url.Action("DeleteArticle", "Article", new { articleId = ViewData["article_id"] })'" />
+                        <input type="button" data-toggle="modal" value="Delete" data-id=@ViewData["article_id"] class="open-deleteDialog btn btn-block btn-danger btn-fill" data-target="#deleteModal" />
                     }
                 }
                 <input type="button" class="btn btn-block btn-info btn-fill" value="Back" onclick="location.href='@Url.Action("DisplayArticles", "Article")'" />
@@ -95,10 +105,26 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        $("html, body").animate({ scrollTop: $('#test').offset().top }, 1000);
-    </script>
-
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Article delete</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to delete this article ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger" id="deleteLink">Delete article</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
+<script src="~/Scripts/DisplayArticleScript.js"></script>

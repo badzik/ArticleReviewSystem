@@ -22,7 +22,7 @@
     @Scripts.Render("~/bundles/scripts")
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
-
+    <script src="~/Scripts/scrollDownAutoScript.js"></script>
 
 </head>
 <body>
@@ -80,7 +80,7 @@
             </div>
         </div><!--  end navbar -->
     </div> <!-- end menu-dropdown -->
-    <div class="container body-content">
+    <div class="container body-content" id="bodyContent">
         @RenderBody()
         <hr />
         <footer>

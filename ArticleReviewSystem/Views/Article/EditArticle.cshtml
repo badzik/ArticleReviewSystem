@@ -1,5 +1,5 @@
 ﻿@model ArticleReviewSystem.ViewModels.EditArticleViewModel
-
+@using ArticleReviewSystem.ViewModels
 <link href="~/Content/AddArticleStyling.css" rel="stylesheet" />
 
 <html>
@@ -11,18 +11,26 @@
             @using (Html.BeginForm("EditArticle", "Article", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
-
+                @Html.HiddenFor(model => model.CoAuthorsCounter)
+                @Html.HiddenFor(model => model.MaxCoAuthors)
                 @Html.HiddenFor(model => model.ArticleId)
                 @Html.HiddenFor(model => model.ArticleName)
+                @Html.HiddenFor(model => model.onlyReupload)
 
                 <div class="form-horizontal">
-                    <h4>EditArticleViewModel</h4>
+                    <h4>Article edit</h4>
                     <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
                         @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                            @if (Model.onlyReupload)
+                            {
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                            }
                             @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -48,11 +56,68 @@
                         </div>
                     </div>
 
+                    <div class="coAutohorsBox">
+                        <div class="col-md-12 form-group">
+                            @Html.LabelFor(model => model.CoAuthors, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <a href="#" id="coAuthPlus"><span class="more-less glyphicon glyphicon-plus-sign" style="vertical-align:middle;"></span></a>
+                            <a href="#" id="coAuthMinus"><span class="more-less glyphicon glyphicon-minus-sign" style="vertical-align:middle;"></span></a>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CoAuthors, "", new { @class = "text-danger" })
+
+                        @for (int i = 0; i < Model.CoAuthors.Count; i++)
+                        {
+                            <div class="panel panel-default" id='CoAuthorPanel@(i)'>
+                                <h5>CoAuthor #@(i + 1)</h5>
+                                <div class="form-group">
+                                    @Html.LabelFor(item => item.CoAuthors[i].Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @if (Model.onlyReupload)
+                                        {
+                                            @Html.EditorFor(item => item.CoAuthors[i].Name, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", @disabled = "disabled" } })
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(item => item.CoAuthors[i].Name, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                        }
+                                        @Html.ValidationMessageFor(item => item.CoAuthors[i].Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(item => item.CoAuthors[i].Surname, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @if (Model.onlyReupload)
+                                        {
+                                            @Html.EditorFor(item => item.CoAuthors[i].Surname, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", @disabled = "disabled" } })
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(item => item.CoAuthors[i].Surname, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                        }
+                                        @Html.ValidationMessageFor(item => item.CoAuthors[i].Surname, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(item => item.CoAuthors[i].Affiliation, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
+                                        @if (Model.onlyReupload)
+                                        {
+                                            @Html.EditorFor(item => item.CoAuthors[i].Affiliation, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", @disabled = "disabled" } })
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(item => item.CoAuthors[i].Affiliation, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                                        }
+                                        @Html.ValidationMessageFor(item => item.CoAuthors[i].Affiliation, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+
 
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Save" class="btn btn-default" />
-                        </div>
+                        <input type="submit" value="Save" class="btn btn-block btn-success btn-fill" />
                     </div>
                 </div>
             }
@@ -60,7 +125,7 @@
             @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
             <div>
-                @Html.ActionLink("Back to List", "Index")
+                <a href="/Article/DisplayArticles" )">Back to list</a>
             </div>
         </div>
     </div>
@@ -70,3 +135,4 @@
 </html>
 <script src="~/Scripts/AddArticleFileBrowseScript.js"></script>
 <script src="~/Scripts/DisplayArticleNameInFileBrowser.js"></script>
+<script src="~/Scripts/EditArticleCoAuthorsScript.js"></script>

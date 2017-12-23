@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using ArticleReviewSystem.ViewModels;
 using ArticleReviewSystem.Enums;
+using System.Collections;
+using ArticleReviewSystem.PartialModels;
 
 namespace ArticleReviewSystem.Controllers
 {
@@ -21,13 +23,13 @@ namespace ArticleReviewSystem.Controllers
             {
                 MaxCoAuthors = 7,
                 CoAuthorsCounter = 2,
-                ArticleName=null
+                ArticleName = null
             };
             return View(avm);
         }
 
         [HttpPost]
-        public ActionResult AddArticle(AddArticleViewModel avm,IEnumerable<CoAuthorViewModel> coAuthors)
+        public ActionResult AddArticle(AddArticleViewModel avm, IEnumerable<CoAuthorViewModel> coAuthors)
         {
             avm.CoAuthors = coAuthors;
             if (String.IsNullOrEmpty(avm.Title))
@@ -48,7 +50,8 @@ namespace ArticleReviewSystem.Controllers
                     BinaryReader Br = new BinaryReader(str);
                     Byte[] pdfFile = Br.ReadBytes((Int32)str.Length);
                     List<CoAuthor> coAuthorsList = new List<CoAuthor>();
-                    if (db.Articles.Any(a => a.Title.ToUpper() == avm.Title.ToUpper())){
+                    if (db.Articles.Any(a => a.Title.ToUpper() == avm.Title.ToUpper()))
+                    {
                         ModelState.AddModelError("Title", "There is an article with a same title");
                         return View(avm);
                     }
@@ -79,7 +82,7 @@ namespace ArticleReviewSystem.Controllers
                         Date = DateTime.Today,
                         Status = ArticleStatus.WaitingToAssignReviewers,
                         MainAuthor = db.Users.Find(userId),
-                        CoAuthors=coAuthorsList
+                        CoAuthors = coAuthorsList
                     });
 
                     db.SaveChanges();
@@ -99,9 +102,43 @@ namespace ArticleReviewSystem.Controllers
         public ActionResult DisplayArticles()
         {
             ApplicationDbContext db = new ApplicationDbContext();
+            DisplayArticlesViewModel davm = new DisplayArticlesViewModel();
             var userId = User.Identity.GetUserId();
+            davm.Articles = db.Articles.Where(m => m.MainAuthor.Id.Equals(userId)).OrderBy(a => a.Title).Take(10).ToList();
+            davm.CurrentPage = 1;
+            davm.ResultsForPage = 10;
+            davm.SortBy = Enums.ArticleSortBy.Title;
+            davm.NumberOfPages = (int)Math.Ceiling((double)db.Articles.Where(m => m.MainAuthor.Id.Equals(userId)).Count() / davm.ResultsForPage);
+            return View(davm);
+        }
 
-            return View(db.Articles.Where(m => m.MainAuthor.Id.Equals(userId)).ToList());
+        [HttpPost]
+        public ActionResult DisplayArticles(DisplayArticlesViewModel davm)
+        {
+            DisplayArticlesPartialModel dapm = new DisplayArticlesPartialModel();
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            List<Article> articles = new List<Article>();
+            var userId = User.Identity.GetUserId();
+            articles = dbContext.Articles.Where(m => m.MainAuthor.Id.Equals(userId)).ToList();
+            if (!String.IsNullOrEmpty(davm.SearchPhrase))
+            {
+                articles = articles.Where(a => a.Title.ToLower().Contains(davm.SearchPhrase.ToLower()) || a.Status.ToString().ToLower().Contains(davm.SearchPhrase.ToLower()) || a.ArticleName.ToLower().Contains(davm.SearchPhrase.ToLower())).ToList();
+            }
+            switch (davm.SortBy)
+            {
+                case ArticleSortBy.Title:
+                    articles = articles.OrderBy(r => r.Title).ToList();
+                    break;
+                case ArticleSortBy.Status:
+                    articles = articles.OrderBy(r => r.Status).ToList();
+                    break;
+                case ArticleSortBy.ArticleName:
+                    articles = articles.OrderBy(r => r.ArticleName).ToList();
+                    break;
+            }
+            dapm.MaxPages = (int)Math.Ceiling((double)articles.Count / (double)davm.ResultsForPage);
+            dapm.Articles = articles.Skip((davm.CurrentPage - 1) * davm.ResultsForPage).Take(davm.ResultsForPage).ToList();
+            return PartialView("_DisplayArticles", dapm);
         }
 
         [HttpGet]
@@ -163,19 +200,12 @@ namespace ArticleReviewSystem.Controllers
         [HttpGet]
         public ActionResult EditArticle(int articleId)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-
-            Article article = db.Articles.Find(articleId);
-            EditArticleViewModel evm = new EditArticleViewModel();
-            evm.ArticleId = article.ArticleId;
-            evm.ArticleName = article.ArticleName;
-            evm.Title = article.Title;
-
+            EditArticleViewModel evm = prepareEditArticleViewModel(articleId);
             return View(evm);
         }
 
         [HttpPost]
-        public ActionResult EditArticle(EditArticleViewModel evm)
+        public ActionResult EditArticle(EditArticleViewModel evm, IEnumerable<CoAuthorViewModel> coAuthors)
         {
 
             if (!ModelState.IsValid)
@@ -203,6 +233,13 @@ namespace ArticleReviewSystem.Controllers
             Article article = db.Articles.Find(evm.ArticleId);
             Byte[] pdfFile = null;
 
+            if (evm.onlyReupload && evm.File == null)
+            {
+                evm = prepareEditArticleViewModel(article.ArticleId);
+                ModelState.AddModelError("", "You need to reupload changed article");
+                return View(evm);
+            }
+
             if (evm.File != null)
             {
                 Stream str = evm.File.InputStream;
@@ -210,16 +247,95 @@ namespace ArticleReviewSystem.Controllers
                 pdfFile = Br.ReadBytes((Int32)str.Length);
                 article.Document = pdfFile;
                 article.ArticleName = evm.File.FileName;
+                if (evm.onlyReupload)
+                {
+                    if (article.Status == ArticleStatus.MinorChangesWithoutNewReview)
+                    {
+                        article.Status = ArticleStatus.PositivelyReviewed;
+                    }
+                }
             }
+
             article.Title = evm.Title;
             article.Date = DateTime.Now;
+            List<CoAuthor> oldCoAuthors = db.CoAuthors.Where(c => c.CoAuthoredArticle.ArticleId == article.ArticleId).ToList();
+            //delete old coauthors
+            foreach (CoAuthor co in oldCoAuthors)
+            {
+                db.CoAuthors.Remove(co);
+            }
 
+            //create new coauthors
+            int count = 0;
+            foreach (CoAuthorViewModel c in coAuthors)
+            {
+                if (String.IsNullOrEmpty(c.Affiliation) || String.IsNullOrEmpty(c.Name) || String.IsNullOrEmpty(c.Surname))
+                {
+                    evm = prepareEditArticleViewModel(article.ArticleId);
+                    ModelState.AddModelError("", "All fields in co-authors info can't be empty");
+                    return View(evm);
+                }
+                CoAuthor co = new CoAuthor()
+                {
+                    Affiliation = c.Affiliation,
+                    Name = c.Name,
+                    Surname = c.Surname,
+                    CoAuthoredArticle = article
+                };
+                db.CoAuthors.Add(co);
+                count++;
+                if (count >= evm.CoAuthorsCounter)
+                {
+                    break;
+                }
+            }
             db.SaveChanges();
 
-            return RedirectToAction("DisplayArticles");
+            return RedirectToAction("DisplayArticleDetails", "Article",new { articleId =article.ArticleId});
         }
 
+        private EditArticleViewModel prepareEditArticleViewModel(int articleId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
 
+            Article article = db.Articles.Find(articleId);
+            EditArticleViewModel evm = new EditArticleViewModel();
+            evm.ArticleId = article.ArticleId;
+            evm.ArticleName = article.ArticleName;
+            evm.Title = article.Title;
+            evm.CoAuthorsCounter = article.CoAuthors.Count;
+            evm.MaxCoAuthors = 7;
+            List<CoAuthorViewModel> coAuthorsList = new List<CoAuthorViewModel>();
+            foreach (CoAuthor ca in article.CoAuthors)
+            {
+                coAuthorsList.Add(new CoAuthorViewModel()
+                {
+                    Affiliation = ca.Affiliation,
+                    Name = ca.Name,
+                    Surname = ca.Surname
+                });
+            }
+            //preparing empty coauthor for possibility of adding new ones
+            for (int i = evm.CoAuthorsCounter; i < 7; i++)
+            {
+                coAuthorsList.Add(new CoAuthorViewModel()
+                {
+                    Affiliation = "",
+                    Name = "",
+                    Surname = ""
+                });
+            }
+            evm.CoAuthors = coAuthorsList;
+            if (article.Status == ArticleStatus.MinorChangesWithoutNewReview || article.Status == ArticleStatus.ChangesWithNewReview)
+            {
+                evm.onlyReupload = true;
+            }
+            else
+            {
+                evm.onlyReupload = false;
+            }
+            return evm;
+        }
 
     }
 }

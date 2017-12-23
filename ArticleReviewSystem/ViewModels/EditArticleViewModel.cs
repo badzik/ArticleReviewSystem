@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using System.ComponentModel.DataAnnotations;
-using ArticleReviewSystem.ViewModels;
 
 namespace ArticleReviewSystem.ViewModels
 {
@@ -20,5 +19,14 @@ namespace ArticleReviewSystem.ViewModels
         [DataType(DataType.Upload)]
         [Display(Name = "File")]
         public HttpPostedFileBase File { get; set; }
+
+        public int MaxCoAuthors { get; set; }
+        public int CoAuthorsCounter { get; set; }
+
+
+        [Display(Name = "Co-authors")]
+        public List<CoAuthorViewModel> CoAuthors;
+
+        public Boolean onlyReupload { get; set; }
     }
 }

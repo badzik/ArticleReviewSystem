@@ -14,6 +14,7 @@ namespace ArticleReviewSystem.ViewModels
         [Display(Name = "Article name")]
         public string ArticleName { get; set; }
         public string Title { get; set; }
+        [Display(Name = "Add date")]
         public DateTime Date { get; set; }
         public ArticleStatus Status { get; set; }
         public ICollection<CoAuthor> CoAuthors { get; set; }

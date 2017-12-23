@@ -18,7 +18,7 @@ namespace ArticleReviewSystem.Enums
         PositivelyReviewed,
         [Description("Minor changes need")]
         MinorChangesWithoutNewReview,
-        [Description("New reviewer needed")]
+        [Description("Need to reupload changed article for new review")]
         ChangesWithNewReview,
         [Description("Negatively reviewed")]
         NegativelyReviewed,

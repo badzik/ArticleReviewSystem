@@ -224,6 +224,8 @@
     <Compile Include="Enums\ReviewEnums\Tables.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Helpers\PdfBuilder.cs" />
+    <Compile Include="PartialModels\DisplayArticlesPartialModel.cs" />
+    <Compile Include="ViewModels\DisplayArticlesViewModel.cs" />
     <Compile Include="ViewModels\DisplayArticleViewModel.cs" />
     <Compile Include="ViewModels\EditArticleViewModel.cs" />
     <Compile Include="ViewModels\ReviewViewModel.cs" />
@@ -294,6 +296,11 @@
     <Content Include="mingwm10.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\DisplayArticleNameInFileBrowser.js" />
+    <Content Include="Scripts\DisplayArticleScript.js" />
+    <Content Include="Scripts\DisplayArticlesSearchScript.js" />
+    <Content Include="Scripts\EditArticleCoAuthorsScript.js" />
+    <Content Include="Scripts\scrollDownAutoScript.js" />
     <Content Include="ssleay32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -377,6 +384,7 @@
     <Content Include="Views\Article\DisplayArticleDetails.cshtml" />
     <Content Include="Views\Article\DisplayArticles.cshtml" />
     <Content Include="Views\Article\EditArticle.cshtml" />
+    <Content Include="Views\Article\_DisplayArticles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

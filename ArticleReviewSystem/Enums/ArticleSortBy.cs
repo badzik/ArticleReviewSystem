@@ -11,6 +11,8 @@ namespace ArticleReviewSystem.Enums
         NumberOfAssignedReviewersAsc,
         NumberOfAssignedReviewersDsc,
         Author,
-        AddDate
+        AddDate,
+        Status,
+        ArticleName
     }
 }
