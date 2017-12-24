@@ -146,19 +146,27 @@ namespace ArticleReviewSystem.Controllers
             List<SimpleReviewer> assigned = new List<SimpleReviewer>();
             List<ApplicationUser> available = new List<ApplicationUser>();
             ApplicationUser reviewer;
-
+            ReviewStatus status;
             //add previous assigned reviewers
             if (ram.AssignedReviewers != null)
             {
                 foreach (SimpleReviewer a in ram.AssignedReviewers)
                 {
                     reviewer = dbContext.Users.Find(a.Id);
+                    if (reviewer.AssignedReviews.Any(r => r.Reviewer.Id == reviewer.Id))
+                    {
+                        status = reviewer.AssignedReviews.First(r => r.Reviewer.Id == reviewer.Id).Status;
+                    }
+                    else
+                    {
+                        status = ReviewStatus.NotReviewedYet;
+                    }
                     assigned.Add(new SimpleReviewer() {
                         Affiliation = reviewer.Affiliation,
                         Id = reviewer.Id,
                         Name = reviewer.Name,
                         Surname = reviewer.Surname,
-                        ReviewStatus = reviewer.AssignedReviews.First(r => r.Reviewer.Id == reviewer.Id).Status
+                        ReviewStatus = status
                     });
                 }
             }
