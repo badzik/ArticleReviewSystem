@@ -15,5 +15,6 @@ namespace ArticleReviewSystem.ViewModels
         public int CurrentPage { get; set; }
         public int NumberOfPages { get; set; }
         public int ResultsForPage { get; set; }
+        public int MaxPages { get; set; }
     }
 }

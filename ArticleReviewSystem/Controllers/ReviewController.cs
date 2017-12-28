@@ -2,9 +2,11 @@
 using ArticleReviewSystem.Enums.ReviewEnums;
 using ArticleReviewSystem.Helpers;
 using ArticleReviewSystem.Models;
+using ArticleReviewSystem.PartialModels;
 using ArticleReviewSystem.ViewModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,17 +20,49 @@ namespace ArticleReviewSystem.Controllers
     {
         ApplicationDbContext dbContext = new ApplicationDbContext();
         // GET: Review
-        [Authorize]
+       // [Authorize]
         public ActionResult ArticlesForReview()
         {
             ArticlesReviewersViewModel articlesReviewersViewModel = new ArticlesReviewersViewModel();
-            ApplicationDbContext dbContext = new ApplicationDbContext();
             articlesReviewersViewModel.Articles = dbContext.Articles.Where(x => x.Reviews.Any(y => y.Reviewer.UserName == User.Identity.Name)).OrderBy(a => a.Reviews.Count).Take(10).ToList();
             articlesReviewersViewModel.CurrentPage = 1;
             articlesReviewersViewModel.ResultsForPage = 10;
             articlesReviewersViewModel.SortBy = Enums.ArticleSortBy.NumberOfAssignedReviewersAsc;
             articlesReviewersViewModel.NumberOfPages = (int)Math.Ceiling((double)dbContext.Articles.Count() / articlesReviewersViewModel.ResultsForPage);
             return View(articlesReviewersViewModel);
+        }
+
+        //[Authorize]
+        [HttpPost]
+        public ActionResult ArticlesForReview(ArticlesReviewersViewModel articlesReviewersViewModel)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+            List<Article> articles = new List<Article>();
+            var userId = User.Identity.GetUserId();
+            articles = dbContext.Articles.Where(x => x.Reviews.Any(y => y.Reviewer.UserName == User.Identity.Name)).OrderBy(a => a.Reviews.Count).Take(10).ToList();
+            if (!String.IsNullOrEmpty(articlesReviewersViewModel.SearchPhrase))
+            {
+                articles = articles.Where(a => a.Title.ToLower().Contains(articlesReviewersViewModel.SearchPhrase.ToLower()) || a.Status.ToString().ToLower().Contains(articlesReviewersViewModel.SearchPhrase.ToLower()) || a.ArticleName.ToLower().Contains(articlesReviewersViewModel.SearchPhrase.ToLower())).ToList();
+            }
+            switch (articlesReviewersViewModel.SortBy)
+            {
+                case ArticleSortBy.Title:
+                    articles = articles.OrderBy(r => r.Title).ToList();
+                    break;
+                case ArticleSortBy.Status:
+                    articles = articles.OrderBy(r => r.Status).ToList();
+                    break;
+                case ArticleSortBy.ArticleName:
+                    articles = articles.OrderBy(r => r.ArticleName).ToList();
+                    break;
+            }
+            ArticlesForReviewPartialModel articlesForReviewPartialModel = new ArticlesForReviewPartialModel
+            {
+                MaxPages = (int)Math.Ceiling((double)articles.Count / (double)articlesReviewersViewModel.ResultsForPage),
+                Articles = articles.Skip((articlesReviewersViewModel.CurrentPage - 1) * articlesReviewersViewModel.ResultsForPage).Take(articlesReviewersViewModel.ResultsForPage).ToList(),
+            };
+             return PartialView("_ArticlesForReview", articlesForReviewPartialModel);
         }
 
         [Authorize]

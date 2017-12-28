@@ -1,0 +1,44 @@
+﻿@model ArticleReviewSystem.PartialModels.ArticlesForReviewPartialModel
+@using ArticleReviewSystem.Extensions
+<div class="Results">
+    @if (Model.Articles.Count() != 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Article Title</th>
+                    <th>Add date</th>
+                    <th>Status</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.HiddenFor(m => m.MaxPages)
+                @foreach (var article in Model.Articles)
+                {
+                    <tr id="clicable-row">
+                        <td>@article.Title</td>
+                        <td>@article.Date.Day.@article.Date.Month.@article.Date.Year</td>
+                        <td>@article.Reviews.SingleOrDefault(m => m.Reviewer.UserName == User.Identity.Name).Status.GetDisplayName()</td>
+                        @if (article.Reviews.SingleOrDefault(m => m.Reviewer.UserName == User.Identity.Name).Status == ArticleReviewSystem.Enums.ReviewStatus.NotReviewedYet)
+                        {
+                            <td>
+                                <a class="btn btn-info btn-fill" href="@Url.Action("AddReview", "Review", new { articleID = article.ArticleId })">Add Review</a>
+                                <a class="btn btn-success btn-fill" target="_blank" href="@Url.Action("ShowArticle", "Review", new { articleID = article.ArticleId })">Show Article</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td><a class="btn btn-info btn-fill" target="_blank" href="@Url.Action("ShowReview", "Review", new { articleID = article.ArticleId })">Show Review</a></td>
+                                            <td><a class="btn btn-success btn-fill" target="_blank" href="@Url.Action("ShowArticle", "Review", new { articleID = article.ArticleId })">Show Article</a></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3 class="text-center">No articles to review</h3>
+    }
+</div>
