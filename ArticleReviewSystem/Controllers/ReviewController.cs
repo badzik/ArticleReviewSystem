@@ -20,7 +20,7 @@ namespace ArticleReviewSystem.Controllers
     {
         ApplicationDbContext dbContext = new ApplicationDbContext();
         // GET: Review
-       // [Authorize]
+        [Authorize]
         public ActionResult ArticlesForReview()
         {
             ArticlesReviewersViewModel articlesReviewersViewModel = new ArticlesReviewersViewModel();
@@ -32,7 +32,7 @@ namespace ArticleReviewSystem.Controllers
             return View(articlesReviewersViewModel);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public ActionResult ArticlesForReview(ArticlesReviewersViewModel articlesReviewersViewModel)
         {
