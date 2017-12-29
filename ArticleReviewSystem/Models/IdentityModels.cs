@@ -15,11 +15,11 @@ namespace ArticleReviewSystem.Models
         public DateTime? ConfirmRegistrationDate { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        // TODO: enum degree
         public string Degree { get; set; }
         public string Affiliation { get; set; }
         public string AdditionalInfo { get; set; }
         public DateTime RegistrationDate { get; set; }
-        // TODO: enum degree
         [InverseProperty("MainAuthor")]
         public virtual ICollection<Article> AddedArticles { get; set; }
 

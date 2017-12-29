@@ -62,7 +62,7 @@ namespace ArticleReviewSystem.Controllers
                 MaxPages = (int)Math.Ceiling((double)articles.Count / (double)articlesReviewersViewModel.ResultsForPage),
                 Articles = articles.Skip((articlesReviewersViewModel.CurrentPage - 1) * articlesReviewersViewModel.ResultsForPage).Take(articlesReviewersViewModel.ResultsForPage).ToList(),
             };
-             return PartialView("_ArticlesForReview", articlesForReviewPartialModel);
+            return PartialView("_ArticlesForReview", articlesForReviewPartialModel);
         }
 
         [Authorize]
@@ -112,9 +112,39 @@ namespace ArticleReviewSystem.Controllers
             emptyReview.Tables = model.Tables.ToString();
             emptyReview.Status = reviewStatus;
             emptyReview.DetailComments = model.DetailComments;
-            dbContext.SaveChanges();
-            
 
+            var ratedReview = article.Reviews.Where(x => x.Status != ReviewStatus.NotReviewedYet);
+
+            var ratedPositively = ratedReview.Where(x => x.Status == ReviewStatus.ReviewedPositively);
+            var ratedArticleNeedMinorChanges = ratedReview.Where(x => x.Status == ReviewStatus.ArticleNeedMinorChanges);
+            var ratedRevieseAndReupload = ratedReview.Where(x => x.Status == ReviewStatus.ArticleNeedImprovement);
+            var ratedNegatively = ratedReview.Where(x => x.Status == ReviewStatus.ReviewedNegatively);
+
+            if(article.Status == null /*TODO: bartek new status*/)
+            {
+                if (emptyReview.Status == ReviewStatus.ReviewedPositively || emptyReview.Status == ReviewStatus.ArticleNeedMinorChanges)
+                    article.Status = ArticleStatus.PositivelyReviewed;
+                else
+                    article.Status = ArticleStatus.NegativelyReviewed;
+                return RedirectToAction("ArticlesForReview", "Review");
+            }
+
+            if (ratedNegatively.Count() > 1) //4 + 4
+                article.Status = ArticleStatus.NegativelyReviewed;
+            else
+            if (ratedNegatively.Count() == 1 && ratedReview.Count() > 1) // 4 + n
+                article.Status = ArticleStatus.NewReviewerNeeded;
+            else
+            if (ratedPositively.Count() > 1) // 1 + 1 
+                article.Status = ArticleStatus.PositivelyReviewed;
+            else
+            if ((ratedArticleNeedMinorChanges.Count() == 1 && ratedPositively.Count() == 1) || ratedArticleNeedMinorChanges.Count() > 1) // 1+2, 2+2
+                article.Status = ArticleStatus.MinorChangesWithoutNewReview;
+            else
+            if (ratedArticleNeedMinorChanges.Count() == 1 && ratedRevieseAndReupload.Count() == 1 || ratedRevieseAndReupload.Count() > 1) // 2+3, 3+3
+                article.Status = ArticleStatus.ChangesWithNewReview;
+
+            dbContext.SaveChanges();
             return RedirectToAction("ArticlesForReview", "Review");
         }
         [Authorize]

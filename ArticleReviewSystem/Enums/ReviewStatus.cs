@@ -16,7 +16,7 @@ namespace ArticleReviewSystem.Enums
         ReviewedNegatively,
         [Display(Name = "Article Need Improvement")]
         ArticleNeedImprovement,
-        [Display(Name = "Article Need Monor Changes")]
+        [Display(Name = "Article Need Minor Changes")]
         ArticleNeedMinorChanges
     }
 }
