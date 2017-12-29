@@ -249,93 +249,105 @@ namespace ArticleReviewSystem.Controllers
                 article.ArticleName = evm.File.FileName;
                 if (evm.onlyReupload)
                 {
-                    if (article.Status == ArticleStatus.MinorChangesWithoutNewReview)
+                    switch (article.Status)
                     {
-                        article.Status = ArticleStatus.PositivelyReviewed;
+                        case ArticleStatus.MinorChangesWithoutNewReview:
+                            {
+                                article.Status = ArticleStatus.PositivelyReviewed;
+                                break;
+                            }
+                        case ArticleStatus.ChangesWithNewReview:
+                            {
+                                article.Status = ArticleStatus.ReReviewsNeeded;
+                                foreach (Review actualReview in article.Reviews)
+                                {
+                                    actualReview.Status = ReviewStatus.NotReviewedYet;
+                                }
+                                break;
+                            }
                     }
                 }
-            }
 
-            article.Title = evm.Title;
-            article.Date = DateTime.Now;
-            List<CoAuthor> oldCoAuthors = db.CoAuthors.Where(c => c.CoAuthoredArticle.ArticleId == article.ArticleId).ToList();
-            //delete old coauthors
-            foreach (CoAuthor co in oldCoAuthors)
-            {
-                db.CoAuthors.Remove(co);
-            }
-
-            //create new coauthors
-            int count = 0;
-            foreach (CoAuthorViewModel c in coAuthors)
-            {
-                if (String.IsNullOrEmpty(c.Affiliation) || String.IsNullOrEmpty(c.Name) || String.IsNullOrEmpty(c.Surname))
+                article.Title = evm.Title;
+                article.Date = DateTime.Now;
+                List<CoAuthor> oldCoAuthors = db.CoAuthors.Where(c => c.CoAuthoredArticle.ArticleId == article.ArticleId).ToList();
+                //delete old coauthors
+                foreach (CoAuthor co in oldCoAuthors)
                 {
-                    evm = prepareEditArticleViewModel(article.ArticleId);
-                    ModelState.AddModelError("", "All fields in co-authors info can't be empty");
-                    return View(evm);
+                    db.CoAuthors.Remove(co);
                 }
-                CoAuthor co = new CoAuthor()
+
+                //create new coauthors
+                int count = 0;
+                foreach (CoAuthorViewModel c in coAuthors)
                 {
-                    Affiliation = c.Affiliation,
-                    Name = c.Name,
-                    Surname = c.Surname,
-                    CoAuthoredArticle = article
-                };
-                db.CoAuthors.Add(co);
-                count++;
-                if (count >= evm.CoAuthorsCounter)
-                {
-                    break;
+                    if (String.IsNullOrEmpty(c.Affiliation) || String.IsNullOrEmpty(c.Name) || String.IsNullOrEmpty(c.Surname))
+                    {
+                        evm = prepareEditArticleViewModel(article.ArticleId);
+                        ModelState.AddModelError("", "All fields in co-authors info can't be empty");
+                        return View(evm);
+                    }
+                    CoAuthor co = new CoAuthor()
+                    {
+                        Affiliation = c.Affiliation,
+                        Name = c.Name,
+                        Surname = c.Surname,
+                        CoAuthoredArticle = article
+                    };
+                    db.CoAuthors.Add(co);
+                    count++;
+                    if (count >= evm.CoAuthorsCounter)
+                    {
+                        break;
+                    }
                 }
+                db.SaveChanges();
+
+                return RedirectToAction("DisplayArticleDetails", "Article", new { articleId = article.ArticleId });
             }
-            db.SaveChanges();
 
-            return RedirectToAction("DisplayArticleDetails", "Article",new { articleId =article.ArticleId});
-        }
-
-        private EditArticleViewModel prepareEditArticleViewModel(int articleId)
-        {
-            ApplicationDbContext db = new ApplicationDbContext();
-
-            Article article = db.Articles.Find(articleId);
-            EditArticleViewModel evm = new EditArticleViewModel();
-            evm.ArticleId = article.ArticleId;
-            evm.ArticleName = article.ArticleName;
-            evm.Title = article.Title;
-            evm.CoAuthorsCounter = article.CoAuthors.Count;
-            evm.MaxCoAuthors = 7;
-            List<CoAuthorViewModel> coAuthorsList = new List<CoAuthorViewModel>();
-            foreach (CoAuthor ca in article.CoAuthors)
+            private EditArticleViewModel prepareEditArticleViewModel(int articleId)
             {
-                coAuthorsList.Add(new CoAuthorViewModel()
+                ApplicationDbContext db = new ApplicationDbContext();
+
+                Article article = db.Articles.Find(articleId);
+                EditArticleViewModel evm = new EditArticleViewModel();
+                evm.ArticleId = article.ArticleId;
+                evm.ArticleName = article.ArticleName;
+                evm.Title = article.Title;
+                evm.CoAuthorsCounter = article.CoAuthors.Count;
+                evm.MaxCoAuthors = 7;
+                List<CoAuthorViewModel> coAuthorsList = new List<CoAuthorViewModel>();
+                foreach (CoAuthor ca in article.CoAuthors)
                 {
-                    Affiliation = ca.Affiliation,
-                    Name = ca.Name,
-                    Surname = ca.Surname
-                });
-            }
-            //preparing empty coauthor for possibility of adding new ones
-            for (int i = evm.CoAuthorsCounter; i < 7; i++)
-            {
-                coAuthorsList.Add(new CoAuthorViewModel()
+                    coAuthorsList.Add(new CoAuthorViewModel()
+                    {
+                        Affiliation = ca.Affiliation,
+                        Name = ca.Name,
+                        Surname = ca.Surname
+                    });
+                }
+                //preparing empty coauthor for possibility of adding new ones
+                for (int i = evm.CoAuthorsCounter; i < 7; i++)
                 {
-                    Affiliation = "",
-                    Name = "",
-                    Surname = ""
-                });
+                    coAuthorsList.Add(new CoAuthorViewModel()
+                    {
+                        Affiliation = "",
+                        Name = "",
+                        Surname = ""
+                    });
+                }
+                evm.CoAuthors = coAuthorsList;
+                if (article.Status == ArticleStatus.MinorChangesWithoutNewReview || article.Status == ArticleStatus.ChangesWithNewReview)
+                {
+                    evm.onlyReupload = true;
+                }
+                else
+                {
+                    evm.onlyReupload = false;
+                }
+                return evm;
             }
-            evm.CoAuthors = coAuthorsList;
-            if (article.Status == ArticleStatus.MinorChangesWithoutNewReview || article.Status == ArticleStatus.ChangesWithNewReview)
-            {
-                evm.onlyReupload = true;
-            }
-            else
-            {
-                evm.onlyReupload = false;
-            }
-            return evm;
-        }
 
+        }
     }
-}
