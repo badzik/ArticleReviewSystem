@@ -120,7 +120,7 @@ namespace ArticleReviewSystem.Controllers
             var ratedRevieseAndReupload = ratedReview.Where(x => x.Status == ReviewStatus.ArticleNeedImprovement);
             var ratedNegatively = ratedReview.Where(x => x.Status == ReviewStatus.ReviewedNegatively);
 
-            if(article.Status == null /*TODO: bartek new status*/)
+            if(article.Status == ArticleStatus.NewReviewerReview)
             {
                 if (emptyReview.Status == ReviewStatus.ReviewedPositively || emptyReview.Status == ReviewStatus.ArticleNeedMinorChanges)
                     article.Status = ArticleStatus.PositivelyReviewed;

@@ -458,7 +458,7 @@
             {
                 string radioChecked = String.Empty;
                 var enumValue = value as Abstract?;
-                if (Model.Content == enumValue.ToString())
+                if (Model.Abstract == enumValue.ToString())
                 {
                     radioChecked = "X";
                 }
@@ -469,8 +469,8 @@
             }
         </table>
     </div>
+    <div class="tableDivRight" id="tableDiv"><h4>Details comments</h4>
+@Model.DetailComments</div>
 
-    <h4>Details comments</h4>
-    @Model.
 </body>
 </html>
