@@ -347,7 +347,7 @@ namespace ArticleReviewSystem.Controllers
                                 });
                             }
                         }
-                        article.Status = ArticleStatus.ChangesWithNewReview;
+                        article.Status = ArticleStatus.NewReviewerReview;
                         dbContext.SaveChangesAsync();
                         break;
                     }

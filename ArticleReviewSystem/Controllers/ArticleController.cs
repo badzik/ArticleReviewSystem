@@ -249,9 +249,22 @@ namespace ArticleReviewSystem.Controllers
                 article.ArticleName = evm.File.FileName;
                 if (evm.onlyReupload)
                 {
-                    if (article.Status == ArticleStatus.MinorChangesWithoutNewReview)
+                    switch (article.Status)
                     {
-                        article.Status = ArticleStatus.PositivelyReviewed;
+                        case ArticleStatus.MinorChangesWithoutNewReview:
+                            {
+                                article.Status = ArticleStatus.PositivelyReviewed;
+                                break;
+                            }
+                        case ArticleStatus.ChangesWithNewReview:
+                            {
+                                article.Status = ArticleStatus.ReReviewsNeeded;
+                                foreach (Review actualReview in article.Reviews)
+                                {
+                                    actualReview.Status = ReviewStatus.NotReviewedYet;
+                                }
+                                break;
+                            }
                     }
                 }
             }
@@ -291,7 +304,7 @@ namespace ArticleReviewSystem.Controllers
             }
             db.SaveChanges();
 
-            return RedirectToAction("DisplayArticleDetails", "Article",new { articleId =article.ArticleId});
+            return RedirectToAction("DisplayArticleDetails", "Article", new { articleId = article.ArticleId });
         }
 
         private EditArticleViewModel prepareEditArticleViewModel(int articleId)
