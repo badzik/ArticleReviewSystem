@@ -388,6 +388,7 @@
     <Content Include="Views\Article\EditArticle.cshtml" />
     <Content Include="Views\Article\_DisplayArticles.cshtml" />
     <Content Include="Views\Review\_ArticlesForReview.cshtml" />
+    <Content Include="Views\Account\DisplayMessage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
