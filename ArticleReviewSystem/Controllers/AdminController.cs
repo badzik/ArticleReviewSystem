@@ -106,7 +106,7 @@ namespace ArticleReviewSystem.Controllers
             articles = dbContext.Articles.Where(a => a.Status != ArticleStatus.PositivelyReviewed && a.Status != ArticleStatus.NegativelyReviewed && a.Status != ArticleStatus.MinorChangesWithoutNewReview).ToList();
             if (!String.IsNullOrEmpty(arvm.SearchPhrase))
             {
-                articles = dbContext.Articles.Where(a => a.Title.ToLower().Contains(arvm.SearchPhrase.ToLower()) || a.MainAuthor.Name.ToLower().Contains(arvm.SearchPhrase.ToLower()) || a.MainAuthor.Surname.ToLower().Contains(arvm.SearchPhrase.ToLower())).ToList();
+                articles = articles.Where(a => a.Title.ToLower().Contains(arvm.SearchPhrase.ToLower()) || a.MainAuthor.Name.ToLower().Contains(arvm.SearchPhrase.ToLower()) || a.MainAuthor.Surname.ToLower().Contains(arvm.SearchPhrase.ToLower())).ToList();
             }
             switch (arvm.SortBy)
             {
