@@ -406,7 +406,8 @@ namespace ArticleReviewSystem.Controllers
             MailMessage message;
             string token = await userManager.GenerateEmailConfirmationTokenAsync(user.Id);
             token = HttpUtility.UrlEncode(token);
-            string link = "https://localhost:44330\\Account\\ConfirmEmail?id=" + user.Id + "&token=" + token;
+            //address for deploy
+            string link = "https://articlereviewsystem.azurewebsites.net\\Account\\ConfirmEmail?id=" + user.Id + "&token=" + token;
             var fromAddress = new MailAddress(mailLogin, "ArticleReviewerSystem");
             var toAddress = new MailAddress(user.Email, "New User");
             const string subject = "Email confirmation - Article Review System";
