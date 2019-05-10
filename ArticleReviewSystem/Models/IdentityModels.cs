@@ -41,8 +41,8 @@ namespace ArticleReviewSystem.Models
         public DbSet<CoAuthor> CoAuthors { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
         {
+            Database.SetInitializer(new MySqlInitializer());
         }
 
         public static ApplicationDbContext Create()
