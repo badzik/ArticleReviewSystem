@@ -1,5 +1,7 @@
 ﻿@model ArticleReviewSystem.ViewModels.DisplayArticleViewModel
 @using System.Text.RegularExpressions
+@using ArticleReviewSystem.Enums.ReviewEnums
+@using ArticleReviewSystem.Helpers
 
 <!doctype html>
 
@@ -83,6 +85,49 @@
                     <h3 class="text-center">None co-authors for this article.</h3>
                 }
             </div>
+            @if (Model.Reviews.Count > 0)
+            {
+                <h3>Reviews</h3>
+                <div class="form-horizontal">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("Name")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Surname")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Final Recommendation")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Review")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Reviews)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Reviewer.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Reviewer.Surname)
+                                    </td>
+                                    <td>
+                                        @EnumExtensions.DisplayName((Enum)Enum.Parse(typeof(FinalRecommendation), item.FinalRecommendation))
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info btn-fill" target="_blank" href="@Url.Action("ShowReview", "Article", new { reviewId = item.ReviewId })">Show Review</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
 
             <div class="space-30"></div>
 

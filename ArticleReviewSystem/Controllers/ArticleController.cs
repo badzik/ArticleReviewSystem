@@ -11,6 +11,7 @@ using ArticleReviewSystem.ViewModels;
 using ArticleReviewSystem.Enums;
 using System.Collections;
 using ArticleReviewSystem.PartialModels;
+using ArticleReviewSystem.Helpers;
 
 namespace ArticleReviewSystem.Controllers
 {
@@ -172,6 +173,7 @@ namespace ArticleReviewSystem.Controllers
             model.Status = article.Status;
             model.Title = article.Title;
             model.CoAuthors = article.CoAuthors;
+            model.Reviews = article.Reviews.Where(r => r.Status != ReviewStatus.NotReviewedYet).ToList();
 
             return View(model);
         }
@@ -348,6 +350,21 @@ namespace ArticleReviewSystem.Controllers
                 evm.onlyReupload = false;
             }
             return evm;
+        }
+
+        [Authorize]
+        public ActionResult ShowReview(int? reviewId)
+        {
+            using(ApplicationDbContext dbContext = new ApplicationDbContext())
+            {
+                Review review = dbContext.Reviews.Single(r => r.ReviewId == reviewId);
+                if (review == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                PdfBuilder builder = new PdfBuilder(review, Server.MapPath("/Views/Review/Pdf.cshtml"), Server.MapPath("/Content/pdf.css"));
+                return builder.GetPdf();
+            }
         }
 
     }

@@ -18,7 +18,7 @@ namespace ArticleReviewSystem.Helpers
             code = HttpUtility.UrlEncode(code);
             //address for deploy
             string link = "https://articlereviewsystem.azurewebsites.net\\Account\\ResetPassword?token=" + code;
-            var fromAddress = new MailAddress("articleReviewerTeam@gmail.com", "Booktrade");
+            var fromAddress = new MailAddress("articleReviewerTeam@gmail.com", "ArticleReviewerSystem");
             var toAddress = new MailAddress(user.Email, user.Name);
             const string fromPassword = "articleReview007";
             const string subject = "Reset password - ArticleReviewSystem";

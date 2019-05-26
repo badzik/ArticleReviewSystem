@@ -18,5 +18,6 @@ namespace ArticleReviewSystem.ViewModels
         public DateTime Date { get; set; }
         public ArticleStatus Status { get; set; }
         public ICollection<CoAuthor> CoAuthors { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }
